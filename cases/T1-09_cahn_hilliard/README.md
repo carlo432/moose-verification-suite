@@ -1,0 +1,7 @@
+# T1-09 — Split Cahn–Hilliard
+
+This case starts from MOOSE's version-matched `SplitCahnHilliard.i` regression input. The conservative split formulation evolves composition `c` and chemical potential `w` with a quartic free energy and a fixed-seed `RandomIC` perturbation around the spinodal composition; it is run at four timestep sizes, including `dt=0.1`.
+
+The structural checks are conservation of `∫c dV` and the expected non-increasing free energy. The build runs a 64×64 field on a 120-unit domain to `t=20` at four timestep sizes, extracts a structure-factor length, and reports a late-window slope of `0.141` against the expected `1/3`. A native MOOSE gradient-energy postprocessor now supplies the authoritative bulk-plus-gradient energy; its maximum step increase is `-0.0186` (monotone decrease). The older nodal finite-difference reconstruction remains a labeled diagnostic only and reaches `2.04e3` because it is not an element energy quadrature. The verdict remains PARTIAL solely because the finite-time coarsening exponent is not yet asymptotic.
+
+The element-integral mass diagnostic is conserved to `4.94e-13` at every timestep level. A separate reproducible `t=100` run has an intermediate `t=20–50` structure-factor exponent of `0.483` (R²=`0.903`), followed by finite-size flattening; it is reported as a diagnostic rather than selected as the acceptance window. This does not claim morphology agreement, long-time asymptotic coarsening, or a calibrated material model.

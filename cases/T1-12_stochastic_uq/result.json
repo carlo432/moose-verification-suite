@@ -1,0 +1,163 @@
+{
+  "case_id": "T1-12_stochastic_uq",
+  "capability": "Stochastic tools and Sobol sensitivity",
+  "validation_class": "A",
+  "reference_value": [
+    0.313905191147811,
+    0.442411144790041,
+    0.0
+  ],
+  "moose_value": [
+    0.3174403905698589,
+    0.45386399074961914,
+    -0.007103447653045312
+  ],
+  "units": "dimensionless",
+  "error": {
+    "absolute": 0.011452845959578128,
+    "relative": 0.011452845959578128
+  },
+  "tolerance": {
+    "metric": "absolute Sobol-index error",
+    "value": 0.03
+  },
+  "convergence": {
+    "levels": [
+      {
+        "N": 256,
+        "rows": 2048,
+        "first_order": [
+          0.312772742924005,
+          0.4710164786088744,
+          0.05919320521341093
+        ],
+        "total_order": [
+          0.5166730503498274,
+          0.47357928870120625,
+          0.28551577768024117
+        ],
+        "first_order_abs_errors": [
+          0.0011324482238060374,
+          0.0286053338188334,
+          0.05919320521341093
+        ],
+        "max_abs_index_error": 0.05919320521341093,
+        "total_order_abs_errors": {
+          "ST1": 0.04091580486013169,
+          "ST3": 0.041832113618093164
+        }
+      },
+      {
+        "N": 1024,
+        "rows": 8192,
+        "first_order": [
+          0.2837174078501098,
+          0.4511607073203704,
+          -0.004315716195156695
+        ],
+        "total_order": [
+          0.5445009002519214,
+          0.450214829997571,
+          0.250889398934945
+        ],
+        "first_order_abs_errors": [
+          0.03018778329770122,
+          0.00874956253032938,
+          0.004315716195156695
+        ],
+        "max_abs_index_error": 0.03018778329770122,
+        "total_order_abs_errors": {
+          "ST1": 0.013087954958037606,
+          "ST3": 0.007205734872796993
+        }
+      },
+      {
+        "N": 4096,
+        "rows": 32768,
+        "first_order": [
+          0.29043668981644244,
+          0.45912666389600737,
+          -0.00805261913525473
+        ],
+        "total_order": [
+          0.5482860465232404,
+          0.4590686796153104,
+          0.24937329066154157
+        ],
+        "first_order_abs_errors": [
+          0.023468501331368574,
+          0.01671551910596636,
+          0.00805261913525473
+        ],
+        "max_abs_index_error": 0.023468501331368574,
+        "total_order_abs_errors": {
+          "ST1": 0.009302808686718622,
+          "ST3": 0.005689626599393566
+        }
+      },
+      {
+        "N": 16384,
+        "rows": 131072,
+        "first_order": [
+          0.3174403905698589,
+          0.45386399074961914,
+          -0.007103447653045312
+        ],
+        "total_order": [
+          0.5692368206562295,
+          0.45551600441440165,
+          0.2563140754640464
+        ],
+        "first_order_abs_errors": [
+          0.0035351994220478855,
+          0.011452845959578128,
+          0.007103447653045312
+        ],
+        "max_abs_index_error": 0.011452845959578128,
+        "total_order_abs_errors": {
+          "ST1": 0.011647965446270447,
+          "ST3": 0.012630411401898384
+        }
+      }
+    ],
+    "observed_order": -0.3736207705921962,
+    "expected_order": -0.5
+  },
+  "sobol_diagnostic": {
+    "availability_correction": {
+      "previous_claim": "The row's limitations field stated 'The deprecated GFunction/SobolStatistics reporter object is unavailable in this MOOSE snapshot' and the indices were reconstructed in Python as a result.",
+      "what_is_actually_registered": "SobolReporter, SobolStatistics and StatisticsReporter are all registered in this build. Only GFunction is missing. The native path was never blocked; the case routed around an obstacle that was not there.",
+      "what_changed": "ishigami_native.i now carries a SobolReporter on the StochasticResults vector and emits JSON. The indices are computed inside MOOSE. The Python reconstruction is kept only as an independent cross-check.",
+      "recorded": "2026-08-07, before the runs below"
+    },
+    "computed_by": "SobolReporter inside MOOSE, from a Sobol sampler over a SamplerTransientMultiApp",
+    "exact_first_order": [
+      0.313905191147811,
+      0.442411144790041,
+      0.0
+    ],
+    "exact_total_order": {
+      "0": 0.557588855209959,
+      "2": 0.243683664062148
+    },
+    "variance_cross_check": {
+      "evaluations": 131072,
+      "sample_variance": 13.629612967268145,
+      "exact_variance": 13.844587940719256,
+      "relative_error": 0.01552772638460651
+    },
+    "design": "8N for k=3 inputs"
+  },
+  "checks": {
+    "index_within_tolerance": true,
+    "monte_carlo_converging": true,
+    "native_path_used": true,
+    "variance_cross_check_agrees": true
+  },
+  "verdict": "PASS",
+  "runtime_s": null,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "notes": "Sobol indices computed natively by SobolReporter inside MOOSE, not reconstructed in Python. At N = 16384 (131072 sub-app solves) the first-order indices are [0.3174, 0.4539, -0.0071] against the exact [0.3139, 0.4424, 0.0], a maximum absolute error of 0.0115 inside the declared 0.03. The error falls with sample size at observed order -0.37 against the -0.5 expected of plain Monte Carlo: 0.0592 at N=256, 0.0302 at N=1024, 0.0235 at N=4096, 0.0115 at N=16384. The published error field is now the declared metric, the maximum absolute index error; it previously carried the variance relative error, which is a different quantity from the one the tolerance governs.",
+  "limitations": "The sub-application is a trivial diffusion solve whose postprocessor evaluates the Ishigami expression, so this exercises the sampler, MultiApp, transfer and reporter machinery rather than sensitivity of a nontrivial physics response. Plain Monte Carlo sampling, so the estimates carry N^-1/2 noise; no surrogate, polynomial chaos or adaptive sampling is verified."
+}

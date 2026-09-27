@@ -1,0 +1,5 @@
+# T1-12 — Stochastic tools and Ishigami sensitivity
+
+The reference is derived symbolically for the Ishigami function (`a=7`, `b=0.1`, independent uniform inputs). `run.sh` retains the version-matched reporter seed as a smoke test and also runs a native MOOSE `SamplerTransientMultiApp` at three sample counts. Each subproblem receives the three sampled coordinates through `SamplerParameterTransfer`, evaluates Ishigami in a `ParsedAux`, and returns the result and coordinates through CSV postprocessors. Native values agree pointwise with the independent closed form to machine precision; their finite-sample variance is reported at each level.
+
+The verifier computes scrambled-Sobol estimates at three sample counts, recovering the important `S3=0` but `ST3>0` interaction, and reports the native MOOSE variance and pointwise reconstruction error. The shipped `GFunction`/`SobolStatistics` reporter object is expired or unregistered in this snapshot, so the index estimates remain an independently reconstructed diagnostic even though the sampler and nonlinear evaluator are native MOOSE.

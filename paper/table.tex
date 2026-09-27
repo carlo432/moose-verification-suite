@@ -1,0 +1,52 @@
+{\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}llcp{4.15cm}p{3.25cm}rrr@{}}
+\caption{The twenty-five verified capabilities. ``Budget'' is the measured error
+as a percentage of the declared tolerance; lower is better. $\dagger$ marks cases
+consuming more than half their budget.\label{tab:main}}\\
+\toprule
+Case & Item & Cl. & Capability & Scored metric & Error & Tol. & Budget \%\\
+\midrule
+\endfirsthead
+\toprule
+Case & Item & Cl. & Capability & Scored metric & Error & Tol. & Budget \%\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\multicolumn{8}{@{}l}{\rule{0pt}{1.0em}\itshape 1.\ Solid mechanics and fracture}\\[1pt]
+\texttt{T1-05} & 1.1 & A & J2 / von Mises elastoplasticity, thick cylinder & relative error in limit pressure & 0.00547 & 0.02 & 27.35\\
+\texttt{T1-06} & 1.2 & A & Power-law secondary creep & relative error in final creep strain & $2.17\times 10^{-4}$ & 0.01 & 2.17\\
+\texttt{T3-23} & 1.3 & A & Irradiation swelling eigenstrain and mismatch stress & L2 error in $\sigma_{xx}$, normalized & $7.28\times 10^{-5}$ & 0.001 & 7.28\\
+\texttt{T1-08} & 1.4 & A & Hertzian elastic contact & relative error in p$_0$ and half-width a & $7.58\times 10^{-4}$ & 0.03 & 2.53\\
+\texttt{T2-17} & 1.5 & B & Fracture mechanics, J and interaction integrals & relative J-integral error & 0.00362 & 0.03 & 12.07\\
+\texttt{T2-18} & 1.6 & A & Finite-strain elastic kinematics & rotation-stage stress / elastic modulus & $1.88\times 10^{-14}$ & $1.00\times 10^{-8}$ & $1.9\times 10^{-4}$\\
+\texttt{T3-22} & 1.7 & A & Euler buckling from an imperfect column & relative error in Southwell-recovered P$_{cr}$ & $1.77\times 10^{-4}$ & 0.03 & 0.588\\
+\multicolumn{8}{@{}l}{\rule{0pt}{1.6em}\itshape 2.\ Heat transfer}\\[1pt]
+\texttt{T1-01} & 2.1 & A & Transient heat conduction & max normalized L2 profile error, three times & $6.87\times 10^{-6}$ & 0.002 & 0.344\\
+\texttt{T1-03} & 2.2 & A & Convective and radiative thermal boundary conditions & fin tip temperature and base heat rate & $3.37\times 10^{-4}$ & 0.01 & 3.37\\
+\texttt{T2-21} & 2.3 & A & One-phase Stefan melting with apparent heat capacity & relative front-position error & 0.00287 & 0.02 & 14.34\\
+\multicolumn{8}{@{}l}{\rule{0pt}{1.6em}\itshape 3.\ Fluid dynamics}\\[1pt]
+\texttt{T1-07} & 3.1 & A & Laminar plane-channel flow & normalized L2 velocity-profile error & 0.00172 & 0.02 & 8.58\\
+\texttt{T2-13} & 3.2 & B & Incompressible lid-driven cavity & L2 profile deviation / U$_{lid}$ & 0.0202 & 0.04 & 50.42\,$\dagger$\\
+\texttt{T2-14} & 3.3 & B & Boussinesq natural convection & relative Nu and midplane-velocity error & 0.0349 & 0.04 & 87.32\,$\dagger$\\
+\texttt{T2-15} & 3.4 & A & Conjugate heat transfer across a fluid/solid interface & relative Nusselt error & $1.03\times 10^{-4}$ & 0.02 & 0.515\\
+\multicolumn{8}{@{}l}{\rule{0pt}{1.6em}\itshape 4.\ Porous flow}\\[1pt]
+\texttt{T2-16} & 4.1 & A & Single-phase Darcy flow and Theis drawdown & relative drawdown error & 0.0111 & 0.02 & 55.51\,$\dagger$\\
+\multicolumn{8}{@{}l}{\rule{0pt}{1.6em}\itshape 5.\ Phase field}\\[1pt]
+\texttt{T1-09} & 5.1 & A & Split Cahn--Hilliard phase-field evolution & absolute error in the log--log slope & 0.0256 & 0.05 & 51.12\,$\dagger$\\
+\texttt{T1-10} & 5.2 & A & Allen--Cahn curvature-driven grain growth & deviation of the R$^2$(t) fit from linearity & $3.72\times 10^{-5}$ & 0.001 & 3.72\\
+\texttt{T3-25} & 5.3 & A & Anisotropic solidification, growth-direction selection & max error in arm direction, degrees & 0.168 & 2 & 8.40\\
+\multicolumn{8}{@{}l}{\rule{0pt}{1.6em}\itshape 6.\ Mass transport}\\[1pt]
+\texttt{T1-02} & 6.1 & A & Fickian species diffusion & max normalized L2 profile error, three times & $5.59\times 10^{-5}$ & 0.002 & 2.79\\
+\texttt{T1-04} & 6.2 & A & Steady reaction--diffusion with a first-order sink & max normalized L2 profile error & $1.90\times 10^{-6}$ & 0.005 & 0.038\\
+\multicolumn{8}{@{}l}{\rule{0pt}{1.6em}\itshape 7.\ Neutronics}\\[1pt]
+\texttt{T1-11} & 7.1 & A & One-group neutron diffusion eigenvalue & relative k-effective error & $3.99\times 10^{-4}$ & 0.001 & 39.89\\
+\multicolumn{8}{@{}l}{\rule{0pt}{1.6em}\itshape 8.\ Multiphysics coupling}\\[1pt]
+\texttt{T2-20} & 8.1 & A & Neutronics-shaped heat source to conduction & relative profile L2 error & $1.85\times 10^{-10}$ & 0.01 & $1.8\times 10^{-6}$\\
+\texttt{T3-24} & 8.2 & B & Fluid--structure interaction, Turek \& Hron FSI1 & relative tip displacement error & 0.00683 & 0.1 & 6.83\\
+\multicolumn{8}{@{}l}{\rule{0pt}{1.6em}\itshape 9.\ Optimisation and uncertainty}\\[1pt]
+\texttt{T2-19} & 9.1 & A & TAO optimization and inverse-parameter recovery & relative recovered-source error & $2.58\times 10^{-4}$ & 0.001 & 25.82\\
+\texttt{T1-12} & 9.2 & A & Stochastic tools and Sobol sensitivity & absolute Sobol-index error & 0.0115 & 0.03 & 38.18\\
+\end{longtable}
+}

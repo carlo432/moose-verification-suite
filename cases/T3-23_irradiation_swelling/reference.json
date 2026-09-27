@@ -1,0 +1,72 @@
+{
+  "case_id": "T3-23_irradiation_swelling",
+  "capability": "Dose-dependent swelling eigenstrain and the mismatch stress it drives",
+  "checklist_item": "1.3",
+  "validation_class": "A",
+  "reclassification": {
+    "was": "E",
+    "now": "A",
+    "reason": "No sourced swelling-versus-dose correlation is available in this workspace, and the row previously carried a self-declared 'illustrative 1%/dpa correlation' while claiming class [E]. That asserted experimental validation the suite does not have. The swelling correlation is now treated as a declared constitutive input, and what is verified is the capability MOOSE actually performs: mapping a dose-dependent volumetric eigenstrain to a mismatch stress field, against a closed form.",
+    "what_this_costs": "The suite now has no [E] rows at all. Any claim of experimental validation must be dropped unless a published correlation is obtained.",
+    "recorded": "2026-08-07, before the runs below"
+  },
+  "parameters": {
+    "youngs_modulus": 200000.0,
+    "poissons_ratio": 0.3,
+    "volumetric_swelling_per_dpa": 0.01,
+    "eigenstrain_per_component": "e(y) = S D(y) / 3",
+    "biaxial_modulus": "E/(1-nu) = 285714.2857142857"
+  },
+  "quantity": {
+    "name": "mismatch stress from a dose-dependent swelling eigenstrain",
+    "symbol": "sigma_xx(y)",
+    "units": "stress",
+    "observable": "Radial line sample of sigma_xx, sigma_yy and sigma_zz through a plane-strain slab whose in-plane displacement is fully restrained and whose top is traction-free."
+  },
+  "reference": {
+    "kind": "closed_form",
+    "formula": "sigma_xx(y) = sigma_zz(y) = -E e(y)/(1-nu) ;  sigma_yy(y) = 0",
+    "derivation": "With eps_xx = 0 (both ends restrained), eps_zz = 0 (plane strain) and sigma_yy = 0 (traction-free top, and dsigma_yy/dy = 0 by equilibrium in a slab), the isotropic elasticity relations reduce to sigma_xx = -2 mu e (3 lambda + 2 mu)/(lambda + 2 mu) = -E e/(1-nu). The result is POINTWISE, so any dose profile has an exact stress field and a gradient case is a genuine test rather than an invariant.",
+    "confirmed_from": "Derived symbolically and checked against the uniform-dose limit."
+  },
+  "tolerance": {
+    "metric": "ElementL2Error of sigma_xx against the closed-form function, normalized by E*S/(3(1-nu)), for the quadratic dose profile at the finest mesh",
+    "value": 0.001,
+    "rationale": "Declared before the runs. The quadratic profile is the only case whose exact displacement field lies outside the second-order FE space, so it is the only one with a genuine discretization error; 1e-3 is the level a 32x32 QUAD9 mesh should reach."
+  },
+  "secondary_tolerances": {
+    "uniform_dose_exact": {
+      "value": 1e-10,
+      "metric": "relative L2 error for a uniform dose",
+      "rationale": "The exact solution is in the FE space, so this must be at round-off. Anything larger means the eigenstrain is not being applied as declared."
+    },
+    "linear_dose_exact": {
+      "value": 1e-10,
+      "metric": "relative L2 error for a linear dose profile",
+      "rationale": "Also representable exactly by second-order elements."
+    },
+    "transverse_stress_zero": {
+      "value": 1e-10,
+      "metric": "max|sigma_yy| normalized by max|sigma_xx|",
+      "rationale": "A traction-free slab must carry zero transverse stress at every dose profile; this is the equilibrium invariant that makes the pointwise closed form valid."
+    },
+    "quadratic_observed_order": {
+      "value": 1.8,
+      "metric": "minimum observed spatial convergence order for the quadratic dose profile over nx = 8, 16, 32"
+    }
+  },
+  "convergence": {
+    "dose_profiles": [
+      "1.0",
+      "y",
+      "y*y"
+    ],
+    "mesh_levels_nx": [
+      8,
+      16,
+      32
+    ],
+    "expected_order": 2.0
+  },
+  "measurement_note": "The error is an element L2 norm computed by MOOSE against a ParsedFunction, not a line-sampled norm. Line sampling a discontinuous MONOMIAL stress with a fixed number of points straddles element boundaries and pollutes the observed order: it gave 1.78 and 1.53 where the element norm gives 2.000, 2.000, 2.000. The tolerance values are unchanged; only the norm was corrected, and the line profile is still reported for the figure."
+}

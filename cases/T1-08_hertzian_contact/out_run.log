@@ -1,0 +1,14 @@
+{
+  "verdict": "PARTIAL",
+  "checks": {
+    "force_balance": true,
+    "peak_pressure_within_tolerance": false,
+    "contact_width_within_tolerance": false,
+    "profile_matches_ellipse": false,
+    "penalty_independent": true
+  },
+  "worst_p0": 0.04174102592231458,
+  "worst_a": 0.08193665119800485,
+  "worst_force_balance": 0.0038808065275711574,
+  "penalty_spread": 3.1054883724464033e-14
+}

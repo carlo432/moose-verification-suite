@@ -1,0 +1,5 @@
+# T2-19 — TAO optimization inverse problem
+
+The version-matched `QuadraticMinimize` seed exercises MOOSE's TAO `Optimize` executioner. Starting from `(5,8,1)`, it recovers the exact synthetic minimizer `(1,2,3)`; the verifier also reports deterministic Gaussian-noise recovery scaling at 1%, 5%, and 10%.
+
+The case now uses the version-matched constant-heat-source inverse seed: TAO drives a steady 2-D conduction forward solve, transfers four point measurements, solves the adjoint problem, and recovers the scalar volumetric source. A reproducible 8, 10, 16, 32, and 64 mesh study recovers q=1000.258 W/m^3 on the finest mesh (0.026% source error), with observed source-error order 2.00 and a finest adjoint gradient of 3.3e-15. Fixed-seed Gaussian perturbations at 1%, 5%, and 10% recover q with 0.443%, 6.54%, and 12.3% relative errors, respectively, providing the required noise-sensitivity scaling. This verifies the PDE/adjoint plumbing and first-order noise response; it does not establish multi-parameter identifiability intervals.

@@ -1,0 +1,80 @@
+{
+  "case_id": "T2-15_conjugate_heat_transfer",
+  "capability": "Conjugate heat transfer across fluid/solid interfaces",
+  "validation_class": "A",
+  "reference_value": 8.235,
+  "moose_value": 8.234152217796291,
+  "units": "dimensionless",
+  "error": {
+    "absolute": 0.0008477822037082916,
+    "relative": 0.00010294865861667173
+  },
+  "tolerance": {
+    "metric": "relative Nusselt error",
+    "value": 0.02
+  },
+  "convergence": {
+    "levels": [
+      {
+        "nusselt": 8.21142425886168,
+        "relative_error": 0.0028628708121821167,
+        "delta_T_mean": 0.4871262126887724,
+        "delta_T_variation": 0.0008861293938643274,
+        "dTb_dy_measured": 0.2602278550371382,
+        "dTb_dy_energy_balance": 0.25862068965517243,
+        "energy_balance_error": 0.006214372810267599,
+        "mass_flow": 7.685614057413449,
+        "nx": 22,
+        "ny": 240
+      },
+      {
+        "nusselt": 8.22959899283218,
+        "relative_error": 0.0006558600082354847,
+        "delta_T_mean": 0.4860504143013435,
+        "delta_T_variation": 0.0010167516228913424,
+        "dTb_dy_measured": 0.259066543027905,
+        "dTb_dy_energy_balance": 0.25862068965517243,
+        "energy_balance_error": 0.0017239663745659106,
+        "mass_flow": 7.719836413474699,
+        "nx": 44,
+        "ny": 480
+      },
+      {
+        "nusselt": 8.234152217796291,
+        "relative_error": 0.00010294865861667173,
+        "delta_T_mean": 0.48578164384123096,
+        "delta_T_variation": 0.0010847641135498258,
+        "dTb_dy_measured": 0.2587318635609453,
+        "dTb_dy_energy_balance": 0.25862068965517243,
+        "energy_balance_error": 0.0004298724356550802,
+        "mass_flow": 7.729784224586606,
+        "nx": 88,
+        "ny": 960
+      }
+    ],
+    "observed_order": null,
+    "expected_order": 2.0
+  },
+  "cht_diagnostic": {
+    "hydraulic_diameter": 4.0,
+    "hydraulic_diameter_derivation": "D_h = 4A/P with A = spacing x depth and P = 2 x depth for two plates, giving D_h = 2 x spacing = 4. The earlier implementation used D_h = 2, the spacing itself, which is a factor of two low.",
+    "developed_window": [
+      12.0,
+      22.0
+    ],
+    "heat_flux_source": "the applied outer NeumannBC, exact by conservation, not a differentiated wall gradient",
+    "why_the_old_geometry_could_not_converge": "The wall was 1 unit thick with k = 10, so axial conduction redistributed heat toward the cold inlet and the interface flux was not uniform, violating the constant-q'' assumption behind Nu = 8.235. Measured dTb/dy was 0.155 against the 0.2586 the energy balance requires, and T_w - T_b varied by 50% across the nominal developed region. The channel was also only L/D_h = 2 long against a thermal entry length of about 3.1. Nu drifted monotonically past the reference (8.376, 8.273, 8.201) instead of converging to it."
+  },
+  "checks": {
+    "nusselt_within_tolerance": true,
+    "energy_balance_closes": true,
+    "thermally_developed": true,
+    "mesh_converged": true
+  },
+  "verdict": "PASS",
+  "runtime_s": 34.348,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "notes": "Thermally developed parallel-plate channel with a thin, low-conductivity conjugate wall. At 88x960 the Nusselt number is 8.2342 against the closed-form 8.235, a relative error of 0.000103 inside the declared 2%. The two invariants that gate it both hold: the mixing-cup bulk temperature rises at 0.258732 against the 0.258621 the applied flux demands (0.00043), and T_w - T_b is constant to 0.00108 across the developed window, which is what thermal development means for constant wall flux.",
+  "limitations": "Laminar, constant properties, Boussinesq-free, two-dimensional. Nu is the developed constant-flux value only; the thermal entry region is excluded by the fixed window rather than verified. The conjugate wall is deliberately thin and low-conductivity so that axial redistribution is negligible, which is what makes the constant-q'' reference applicable -- a thick or highly conductive wall is a different problem."
+}

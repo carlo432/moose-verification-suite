@@ -1,0 +1,102 @@
+{
+  "case_id": "T3-22_buckling",
+  "capability": "Euler buckling load recovered from an imperfection-based nonlinear column",
+  "checklist_item": "1.7",
+  "validation_class": "A",
+  "parameters": {
+    "length": 100.0,
+    "thickness": 2.0,
+    "depth": 1.0,
+    "youngs_modulus": 1000.0,
+    "poissons_ratio": 0.0,
+    "second_moment_of_area": 0.6666666666666666,
+    "EI": 666.6666666666666,
+    "note": "nu = 0 so the plane-strain effective modulus equals E; I = b h^3/12 with b = 1."
+  },
+  "quantity": {
+    "name": "Euler critical buckling load",
+    "symbol": "P_cr",
+    "units": "force per unit depth",
+    "observable": "Slope of the Southwell line: the additional lateral deflection a of a geometrically imperfect column under a dead axial load satisfies a = a0 P/(P_cr - P), so a/P plotted against a is a straight line of slope 1/P_cr. P is the measured SidesetReaction at the clamp, not the nominal applied load.",
+    "supersedes": "The previous result.json reported southwell_Pcr equal to the closed-form value at every imperfection level with relative_error exactly 0.0, and moose_value was null. No MOOSE quantity entered that number. Replaced 2026-08-03 before the runs below."
+  },
+  "reference": {
+    "kind": "closed_form",
+    "formula": "P_cr = pi^2 E I / (K L)^2",
+    "cases": {
+      "cantilever_fixed_free": {
+        "input": "column.i",
+        "K": 2.0,
+        "value": 0.16449340668482262,
+        "loading": "dead axial traction on the free end"
+      },
+      "fixed_pinned": {
+        "input": "column_fixed.i",
+        "kL": 4.493409457909064,
+        "value": 1.346048570428442,
+        "formula": "tan(kL) = kL  ->  kL = 4.493409457909064 ;  Pcr = (kL)^2 EI/L^2",
+        "loading": "dead axial traction, loaded face held at disp_y = 0 (a roller)"
+      },
+      "fixed_fixed_sliding": {
+        "input": "column_clamped.i",
+        "K": 0.5,
+        "value": 2.631894506957162,
+        "loading": "uniform prescribed disp_x on the loaded face, which holds it plane and vertical"
+      }
+    },
+    "derivation": "Euler column buckling. Two effective-length factors differing by 4x in K and 16x in P_cr are run so the measurement cannot accidentally agree.",
+    "confirmed_from": "EI verified independently in MOOSE by a transverse tip-load test: implied EI = 666.508 against the nominal 666.667, a ratio of 0.9998.",
+    "declaration_correction": {
+      "what_was_wrong": "The first declaration listed only two cases and labelled the disp_y = 0 loaded face 'fixed_fixed_sliding' with K = 0.5. That is wrong: holding disp_y = 0 on a vertical face removes lateral translation but not rotation, because the section slope dv/dx is unconstrained. The input implements fixed-PINNED.",
+      "how_it_was_caught": "The recovered Pcr was 1.3532 against the declared 2.6319, a 48% error that did not move with imperfection amplitude or mesh. A discrepancy that is insensitive to every refinement knob is a wrong reference or a wrong model, never discretization -- and 1.3532 is 0.5% from the fixed-pinned load 1.34605.",
+      "what_changed": "The mislabelled case is relabelled fixed-pinned against its own exact transcendental reference, and a genuine sliding clamp was added in column_clamped.i by driving the loaded face with a uniform prescribed displacement. No tolerance was altered. The suite now covers three effective lengths spanning 16x in Pcr, which is stronger evidence than the two originally declared.",
+      "recorded": "2026-08-03, before the reported runs"
+    }
+  },
+  "tolerance": {
+    "metric": "relative error of the Southwell-recovered P_cr against the closed-form Euler load, for both boundary conditions",
+    "value": 0.03,
+    "rationale": "Carried over unchanged from the original declaration. Not widened after observing the answer."
+  },
+  "secondary_tolerances": {
+    "imperfection_independence": {
+      "value": 0.02,
+      "metric": "relative spread of the recovered P_cr across the three imperfection amplitudes",
+      "rationale": "Southwell must not depend on the imperfection used to excite it. Declared before the runs."
+    },
+    "mesh_independence": {
+      "value": 0.02,
+      "metric": "relative spread of the recovered P_cr across nx = 40, 80, 160"
+    },
+    "southwell_linearity": {
+      "value": 0.999,
+      "metric": "minimum R^2 of the Southwell straight-line fit over P/P_cr in [0.3, 0.8]",
+      "rationale": "A curved Southwell plot means the response is not first-mode dominated and the slope would not mean what it claims."
+    }
+  },
+  "fit_window": {
+    "P_over_Pcr": [
+      0.3,
+      0.8
+    ],
+    "rationale": "Fixed before the runs. Below 0.3 the deflection is small and the fit is noise dominated; above ~0.85 the Newton solve slows at the limit point and finite-amplitude effects bend the Southwell line."
+  },
+  "convergence": {
+    "imperfection_amplitudes_over_L": [
+      0.001,
+      0.002,
+      0.005
+    ],
+    "mesh_levels_nx": [
+      40,
+      80,
+      160
+    ],
+    "expected_order": null,
+    "boundary_conditions": [
+      "cantilever_fixed_free",
+      "fixed_pinned",
+      "fixed_fixed_sliding"
+    ]
+  }
+}

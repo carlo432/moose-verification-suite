@@ -1,0 +1,47 @@
+{
+  "case_id": "T2-17_fracture_KI",
+  "capability": "Fracture mechanics J/interaction integrals",
+  "validation_class": "B",
+  "reference_value": 2.434,
+  "moose_value": 2.42518365095226,
+  "units": "force/length",
+  "error": {
+    "absolute": 0.00881634904773998,
+    "relative": 0.003622164768997571
+  },
+  "tolerance": {
+    "metric": "relative J-integral error",
+    "value": 0.03,
+    "rationale": "Declared before solve; path-independence across five annular contours is reported separately."
+  },
+  "convergence": {
+    "levels": [
+      {
+        "refinement": 0,
+        "J_mean": 2.3274836568847,
+        "relative_error": 0.043761850088455345,
+        "contour_spread": 0.0036245833935056667
+      },
+      {
+        "refinement": 1,
+        "J_mean": 2.3931153978801,
+        "relative_error": 0.016797289285086392,
+        "contour_spread": 0.0002167301742154074
+      },
+      {
+        "refinement": 2,
+        "J_mean": 2.42518365095226,
+        "relative_error": 0.003622164768997571,
+        "contour_spread": 0.0001381163083746359
+      }
+    ],
+    "observed_order": null,
+    "expected_order": null
+  },
+  "verdict": "PASS",
+  "runtime_s": 0.0,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "notes": "The NAFEMS numerical benchmark J-integral is now run at three uniform refinement levels. Finest mean J=2.42518365, relative error=0.003622, and contour spread=0.0001381. The interaction-integral companion runs at the same refinements but is not used to hide the J discrepancy.",
+  "limitations": "NAFEMS crack seed rather than the planned SENT geometry; no verified Tada/Paris/Irwin K_I polynomial or independent J-to-K conversion reported."
+}

@@ -1,0 +1,43 @@
+{
+  "case_id": "T1-07_plane_poiseuille",
+  "capability": "Laminar plane-channel flow (Poiseuille)",
+  "checklist_item": "3.1",
+  "validation_class": "A",
+  "parameters": {
+    "dynamic_viscosity": 0.5,
+    "density": 1.1,
+    "half_height_m": 1.0,
+    "pressure_gradient_Pa_per_m": -1.0,
+    "channel_length_m": 10.0
+  },
+  "quantity": {
+    "name": "velocity profile, maximum/average ratio, and mass-flow conservation",
+    "symbol": "u(y), u_max/u_avg, mdot",
+    "units": "m/s and normalized flow rate"
+  },
+  "reference": {
+    "value": 1.0,
+    "uncertainty": null,
+    "kind": "closed_form",
+    "source": "Fully developed plane Poiseuille flow: u(y)=(-dp/dx)(h^2-y^2)/(2 mu), u_max/u_avg=3/2, and f Re=96 for a plane channel.",
+    "derivation": "README.md and verify.py",
+    "confirmed_from": "For h=1, mu=0.5, -dp/dx=1, u_max=1 and integral rho*u dy = 1.4666666666666668."
+  },
+  "secondary_references": {
+    "average_velocity": 0.6666666666666666,
+    "max_to_average_ratio": 1.5,
+    "mass_flow_rate": 1.4666666666666668,
+    "friction_factor_times_reynolds": 96.0
+  },
+  "tolerance": {
+    "metric": "normalized L2 velocity-profile error at the finest transverse mesh",
+    "value": 0.02,
+    "rationale": "Two percent allows finite-volume wall-gradient and nonlinear-solver error while requiring the profile shape and integral diagnostics to agree."
+  },
+  "convergence": {
+    "expected_order": 2.0,
+    "refinement_levels": 4,
+    "spatial_order_tolerance": 0.2,
+    "mass_balance_relative_tolerance": 1e-8
+  }
+}

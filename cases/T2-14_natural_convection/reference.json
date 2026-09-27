@@ -1,0 +1,43 @@
+{
+  "case_id": "T2-14_natural_convection",
+  "capability": "Boussinesq natural convection in a differentially heated cavity",
+  "checklist_item": "3.3",
+  "validation_class": "B",
+  "quantity": {
+    "name": "average Nusselt number and midplane velocity trend",
+    "symbol": "Nu_avg, u_max",
+    "units": "dimensionless"
+  },
+  "reference": {
+    "value": {
+      "Ra": [
+        1000,
+        10000,
+        100000,
+        1000000
+      ],
+      "Nu_avg": [
+        1.118,
+        2.243,
+        4.519,
+        8.8
+      ]
+    },
+    "uncertainty": null,
+    "kind": "numerical_benchmark",
+    "source": "de Vahl Davis (1983), International Journal for Numerical Methods in Fluids 3:249\u2013264, DOI 10.1002/fld.1650030305",
+    "derivation": "The published Nu sequence is reproduced in the public AeroSim benchmark transcription: https://docs.aerosim.io/nassu/validation/thermal/01_differentially_heated_cavity/README.html#reference-and-acceptance",
+    "confirmed_from": "AeroSim transcription of de Vahl Davis Table values; primary DOI recorded above"
+  },
+  "tolerance": {
+    "metric": "relative Nu and midplane-velocity error",
+    "value": 0.04,
+    "rationale": "Declared from PLAN.md before the refinement solve; the cited benchmark transcription is recorded above."
+  },
+  "convergence": {
+    "expected_order": null,
+    "refinement_levels": 3,
+    "note": "Benchmark trend across Rayleigh numbers and mesh sizes; no formal order claimed."
+  },
+  "convergence_caveat": "TIGHTEST MARGIN IN THE SUITE: Nu 3.49% and midplane velocity 3.83% against a 4% tolerance. The Ra=1e6 sequence is monotone but has NOT plateaued -- 32: 16.11%, 64: 6.47%, 96: 4.32%, 128: 3.49%, which is roughly FIRST-order convergence, not the second order the discretization should give. 3.49% must therefore not be read as a converged value; it is the error at 128x128 and a finer mesh would still move it. The pass is genuine and the trend is toward the reference, but the headroom is 0.5 percentage points. Ra=1e5 is scored on only two meshes (6.89% -> 3.42%)."
+}

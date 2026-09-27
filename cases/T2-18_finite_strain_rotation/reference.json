@@ -1,0 +1,10 @@
+{
+  "case_id":"T2-18_finite_strain_rotation",
+  "capability":"Finite-strain elastic kinematics",
+  "checklist_item":"1.6",
+  "validation_class":"A",
+  "quantity":{"name":"stress invariance under rigid 90-degree rotation","symbol":"sigma_rot","units":"stress"},
+  "reference":{"value":0.0,"uncertainty":null,"kind":"closed_form","source":"Rigid-body rotation has F=R, so C=I and an objective finite-strain elastic law produces zero incremental stress","derivation":"R^T R=I; Green strain E=(C-I)/2=0","confirmed_from":"finite-strain kinematics and rotation-test seed documentation"},
+  "tolerance":{"metric":"maximum rotation-stage stress normalized by elastic modulus","value":1e-8,"rationale":"Declared before solve; isolates the exact rigid-rotation invariant without relying on a hyperelastic material registration."},
+  "convergence":{"expected_order":null,"refinement_levels":3,"note":"One-element rotation regression; time-stage trend is reported instead of formal mesh order."}
+}

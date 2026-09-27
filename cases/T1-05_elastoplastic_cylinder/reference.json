@@ -1,0 +1,65 @@
+{
+  "case_id": "T1-05_elastoplastic_cylinder",
+  "capability": "J2/von Mises elastoplasticity in a thick cylinder",
+  "checklist_item": "1.1",
+  "validation_class": "A",
+  "parameters": {
+    "inner_radius_m": 1.0,
+    "outer_radius_m": 2.0,
+    "yield_stress_MPa": 100.0,
+    "youngs_modulus_MPa": 210000.0,
+    "poissons_ratio": 0.3,
+    "plane_strain": true
+  },
+  "quantity": {
+    "name": "full-plastic-collapse internal pressure",
+    "symbol": "p_lim",
+    "units": "MPa",
+    "observable": "Applied internal pressure at the first load step for which the effective plastic strain is nonzero on the outer radius r=b. Full-section yield is the definition of plastic collapse for this problem, so this is a direct measurement of p_lim and not a threshold proxy.",
+    "supersedes": "The previous observable was the first pressure with max effective plastic strain >= 1, an arbitrary operational threshold. Replaced 2026-08-03 before the runs below."
+  },
+  "reference": {
+    "value": 80.03774225686291,
+    "uncertainty": null,
+    "kind": "closed_form",
+    "source": "Von Mises plane-strain thick-cylinder solution: p_y=(sigma_y/sqrt(3))(1-a^2/b^2); p(c)=(sigma_y/sqrt(3))[2 ln(c/a)+1-c^2/b^2]; p_lim=(2 sigma_y/sqrt(3)) ln(b/a).",
+    "derivation": "README.md and verify.py",
+    "confirmed_from": "Evaluated symbolically and numerically for a=1 m, b=2 m, sigma_y=100 MPa."
+  },
+  "secondary_references": {
+    "yield_onset_pressure_MPa": 43.30127018922194,
+    "plastic_collapse_pressure_MPa": 80.03774225686291,
+    "fully_plastic_stress_field": {
+      "k_MPa": 115.47005383792515,
+      "sigma_rr": "-k*ln(b/r)",
+      "sigma_tt": "k*(1 - ln(b/r))",
+      "sigma_zz": "k*(0.5 - ln(b/r))",
+      "derivation": "Equilibrium dsigma_rr/dr = (sigma_tt-sigma_rr)/r with the plane-strain von Mises condition sigma_tt-sigma_rr = 2*sigma_y/sqrt(3) = k, integrated under the traction-free outer wall sigma_rr(b)=0. Setting sigma_rr(a) = -p recovers p_lim = k*ln(b/a)."
+    }
+  },
+  "tolerance": {
+    "metric": "relative error in p_lim; p_y, p(c) and the fully-plastic stress field are secondary checks",
+    "value": 0.02,
+    "rationale": "Two percent covers the moving plastic-front mesh and pressure-step discretization; it is not widened after observing the answer."
+  },
+  "measurement_resolution": {
+    "requirement": "The load increment must be at most 0.005*p_lim, so that the measurement is at least four times finer than the declared 2% tolerance. Declared in response to review finding F2, where a 2 MPa increment (2.5% of p_lim) made the row structurally unable to fail.",
+    "max_pressure_increment_MPa": 0.4002,
+    "step_independence": "Halving the increment must move the measured p_lim by less than the 2% tolerance."
+  },
+  "secondary_tolerances": {
+    "yield_onset_relative": 0.01,
+    "p_c_curve_relative": 0.02,
+    "fully_plastic_stress_profile": {
+      "metric": "L2 norm of the sigma_rr and sigma_tt profile error at the collapse step, normalized by k = 2*sigma_y/sqrt(3)",
+      "value": 0.02,
+      "rationale": "Declared before the runs. This is the resolved component-wise stress plateau whose absence kept the case PARTIAL; 2% matches the primary tolerance and covers constant-monomial element sampling of a logarithmic profile."
+    }
+  },
+  "convergence": {
+    "expected_order": null,
+    "refinement_levels": 4,
+    "spatial_order_tolerance": null,
+    "note": "p_lim is a limit load, not a pointwise field value, and dp/dc vanishes as the front reaches the outer wall. No spatial convergence order is claimed for it; mesh independence is reported instead."
+  }
+}

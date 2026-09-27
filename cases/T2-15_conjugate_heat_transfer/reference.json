@@ -1,0 +1,85 @@
+{
+  "case_id": "T2-15_conjugate_heat_transfer",
+  "capability": "Conjugate heat transfer across fluid/solid interfaces",
+  "checklist_item": "3.4",
+  "validation_class": "A",
+  "quantity": {
+    "name": "fully developed parallel-plate Nusselt number",
+    "symbol": "Nu",
+    "units": "dimensionless",
+    "observable": "Nu = q'' D_h / (k (T_w - T_b)) evaluated in the thermally developed region. q'' = 1 is the applied outer flux, exact by conservation, rather than a differentiated field. T_b is the mixing-cup average integral(u T)/integral(u) across the channel and T_w is the mean interface temperature at the same axial station.",
+    "supersedes": "The previous row used D_h = 2 and a channel in which the flow was not thermally developed; its Nu drifted monotonically past 8.235 (8.376, 8.273, 8.201) rather than converging to it, so the reported 0.4% agreement was a crossing, not convergence."
+  },
+  "reference": {
+    "value": 8.235,
+    "uncertainty": null,
+    "kind": "closed_form",
+    "source": "Fully developed laminar parallel-plate channel with both walls at constant heat flux: Nu=8.235; NASA NTRS heat-transfer notes, https://ntrs.nasa.gov/api/citations/19920012099/downloads/19920012099.pdf",
+    "derivation": "Classical Graetz solution; constant-q'' parallel plates, not constant-temperature (7.541) or circular-pipe values",
+    "confirmed_from": "NASA NTRS discussion of the parallel-plate constant-heat-flux definition"
+  },
+  "tolerance": {
+    "metric": "relative Nusselt error",
+    "value": 0.02,
+    "rationale": "Declared before the flowing-channel solve; the coarse diagnostic remains PARTIAL until refinement and exact flux extraction are added."
+  },
+  "convergence": {
+    "expected_order": 2.0,
+    "refinement_levels": 3,
+    "mesh_levels": [
+      [
+        22,
+        240
+      ],
+      [
+        44,
+        480
+      ],
+      [
+        88,
+        960
+      ]
+    ],
+    "note": "Interface heat-flux continuity and the energy balance are reported as invariants alongside the Nusselt error.",
+    "mesh_level_correction": {
+      "what_was_wrong": "The declared coarse level nx=11 gives dx=0.2 on a 2.2-wide domain, so the fluid/solid interfaces at x=0.1 and x=2.1 do not fall on element boundaries and the subdomain cannot be represented. That run aborted.",
+      "what_changed": "nx must be a multiple of 22 for the 0.1-thick wall to be meshed. Levels are 22, 44, 88. No tolerance was altered.",
+      "recorded": "2026-08-03, after the abort and before the replacement level was used"
+    }
+  },
+  "parameters": {
+    "plate_spacing": 2.0,
+    "hydraulic_diameter": 4.0,
+    "wall_heat_flux": 1.0,
+    "fluid_conductivity": 1.0,
+    "wall_thickness": 0.1,
+    "wall_conductivity": 1.0,
+    "channel_length": 24.0,
+    "u_max": 5.8,
+    "mass_flow_per_depth": 7.733333333333333,
+    "hydraulic_diameter_derivation": "D_h = 4A/P with A = spacing x depth and P = 2 x depth for two plates, giving D_h = 2 x spacing = 4. The earlier implementation used D_h = 2, the spacing itself, which is a factor of two low."
+  },
+  "secondary_tolerances": {
+    "energy_balance": {
+      "value": 0.02,
+      "metric": "relative difference between the measured mixing-cup dT_b/dy and 2 q''/(rho cp mdot)",
+      "rationale": "Declared before the runs. If the bulk temperature does not rise at the rate the applied flux demands, no Nusselt number extracted from it means anything."
+    },
+    "thermal_development": {
+      "value": 0.02,
+      "metric": "relative variation of T_w - T_b across the developed window, max-min over mean",
+      "rationale": "Constant q'' developed flow requires T_w - T_b to be constant. This is the check the old geometry failed by 50%."
+    },
+    "interface_flux_continuity": {
+      "value": 0.02,
+      "metric": "relative mismatch between the solid-side and fluid-side interface flux integrals"
+    }
+  },
+  "developed_window": {
+    "y_range": [
+      12.0,
+      22.0
+    ],
+    "rationale": "Fixed before the runs: past the thermal entry length of about 3.1 and clear of the outlet boundary."
+  }
+}

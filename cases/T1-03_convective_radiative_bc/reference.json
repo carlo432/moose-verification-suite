@@ -1,0 +1,110 @@
+{
+  "case_id": "T1-03_convective_radiative_bc",
+  "capability": "Convective and radiative thermal boundary conditions",
+  "checklist_item": "2.2",
+  "validation_class": "A",
+  "parameters": {
+    "fin": {
+      "length_m": 1.0,
+      "width_m": 0.1,
+      "conductivity_W_per_mK": 1.0,
+      "h_W_per_m2K": 0.5,
+      "base_temperature_K": 400.0,
+      "ambient_temperature_K": 300.0,
+      "perimeter_m": 2.0,
+      "cross_section_m2": 0.1,
+      "m_per_m": 3.1622776601683795,
+      "comparison_times_s": [
+        "steady"
+      ]
+    },
+    "radiative_lumped": {
+      "length_m": 0.01,
+      "conductivity_W_per_mK": 100.0,
+      "density_kg_per_m3": 1000000.0,
+      "specific_heat_J_per_kgK": 1.0,
+      "initial_temperature_K": 500.0,
+      "ambient_temperature_K": 300.0,
+      "emissivity": 1.0,
+      "stefan_boltzmann_W_per_m2K4": 5.670374e-08,
+      "comparison_times_s": [
+        10.0,
+        50.0,
+        100.0
+      ]
+    }
+  },
+  "quantity": {
+    "name": "fin tip temperature, fin base heat rate, and radiative lumped temperature history",
+    "symbol": "T_tip, q_base, T(t)",
+    "units": "K and W per unit out-of-plane depth",
+    "observable": "Measured on the 2-D fin.i model, whose sides carry ConvectiveHeatFluxBC. T_tip is SideAverageValue on the adiabatic tip. The fin heat rate is taken as the total convective loss h*integral(T-T_inf) over the top and bottom faces, which is free of the base corner singularity; the base SideDiffusiveFluxIntegral is reported alongside it as a conservation check.",
+    "supersedes": "Acceptance previously rested on fin1d.i, a 1-D Diffusion + CoefReaction model in which convection is a volumetric sink rather than a boundary condition, so it did not exercise ConvectiveHeatFluxBC at all. Moved back onto the 2-D model 2026-08-03 before these runs; fin1d.i is retained only as an independent cross-check of the analytic solution."
+  },
+  "reference": {
+    "value": 308.45070227039247,
+    "uncertainty": null,
+    "kind": "closed_form",
+    "source": "Straight fin with uniform properties, convective sides, adiabatic tip: theta/theta_b = cosh[m(L-x)]/cosh(mL), m=sqrt(hP/(kA)); q_base=sqrt(hPkA) theta_b tanh(mL). Lumped radiative body: rho cp L/2 dT/dt = -epsilon sigma (T^4 - T_inf^4), integrated and inverted numerically.",
+    "derivation": "README.md and verify.py",
+    "confirmed_from": "Fin expressions evaluated directly; radiative ODE inverted with scipy.integrate.quad and brentq."
+  },
+  "secondary_references": {
+    "fin_base_heat_rate_W_per_m": 31.509658251300003,
+    "radiative_lumped_temperature_K": {
+      "10.0": 494.00025832924894,
+      "50.0": 472.9402239376656,
+      "100.0": 451.6906418028987
+    }
+  },
+  "tolerance": {
+    "metric": "fin tip temperature and base heat rate relative error; maximum radiative temperature-history deviation relative to the analytic lumped solution",
+    "value": 0.01,
+    "rationale": "One percent covers the declared finite-element and timestep error. The lumped approximation is independently justified by Bi << 0.1 and is not used to hide spatial gradients."
+  },
+  "convergence": {
+    "expected_order": 2.0,
+    "refinement_levels": 4,
+    "spatial_order_tolerance": 0.2,
+    "fin_base_flux_expected_order": 1.0,
+    "fin_base_flux_order_rationale": "The base heat rate is a boundary gradient/flux postprocessor; first-order asymptotic convergence is expected for a linear finite-element gradient even though the temperature field is second order.",
+    "radiative_biot_number_max": 0.1,
+    "mesh_levels_nx": [
+      100,
+      200,
+      400,
+      800,
+      1600
+    ],
+    "note": "T_tip converges at second order to the 2-D answer, which sits a fixed 3.4e-4 from the 1-D analytic; that plateau is model form, not discretization, and the width study drives it to zero. The base flux integral converges below first order because the Dirichlet base meets the convective sides at a re-entrant corner, which is why the heat rate is taken from the convective loss instead."
+  },
+  "fin_limit_study": {
+    "purpose": "The 1-D fin formula is an approximation to the 2-D problem, exact only as the cross-section Biot number Bi = h w /(2k) tends to zero. Holding m = sqrt(2h/(k w)) fixed by scaling h proportionally to w keeps the analytic target unchanged while Bi falls as w^2, so the residual difference must vanish at second order in w. This verifies the convective boundary condition and identifies the previously unexplained order deficit as fin model form rather than discretization.",
+    "widths": [
+      0.1,
+      0.05,
+      0.025,
+      0.0125
+    ],
+    "heat_transfer_coefficients": [
+      0.5,
+      0.25,
+      0.125,
+      0.0625
+    ],
+    "invariant_m": 3.1622776601683795,
+    "expected_order_in_width": 2.0,
+    "order_tolerance": 0.3
+  },
+  "secondary_tolerances": {
+    "energy_balance_imbalance": {
+      "value": 0.005,
+      "metric": "relative difference between the base diffusive flux integral and the total convective loss at the finest mesh",
+      "rationale": "A conservation identity, declared before the runs; it must hold far tighter than the 1% physics tolerance."
+    },
+    "fin_limit_monotone": {
+      "metric": "the T_tip deviation from the 1-D analytic must decrease at every width refinement",
+      "value": true
+    }
+  }
+}

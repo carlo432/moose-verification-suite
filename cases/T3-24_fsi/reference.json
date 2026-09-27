@@ -1,0 +1,240 @@
+{
+  "case_id": "T3-24_fsi",
+  "capability": "Fluid-structure interaction benchmark FSI1",
+  "checklist_item": "8.2",
+  "validation_class": "B",
+  "quantity": "elastic-wall tip displacement",
+  "reference": {
+    "value": [
+      2.27e-05,
+      0.0008209
+    ],
+    "quantity": "steady displacement of control point A at the flag tip, [ux, uy]",
+    "units": "m",
+    "additional": {
+      "drag": 14.295,
+      "lift": 0.7638
+    },
+    "source": "Turek & Hron, 'Proposal for numerical benchmarking of fluid-structure interaction between an elastic object and laminar incompressible flow', in Fluid-Structure Interaction, Lecture Notes in Computational Science and Engineering vol. 53, Springer 2006, pp. 371-385. Benchmark home: featflow.de/en/benchmarks/cfdbenchmarking/fsi_benchmark.html",
+    "provenance": {
+      "checked": "2026-08-07",
+      "status": "SOURCED against the primary table",
+      "primary": "Turek & Hron 2006, Table 13 'Results for FSI1', p. 258. The paper PDF was supplied by Carlos. The 'ref.' row reads ux = 0.0227e-3, uy = 0.8209e-3, drag = 14.295, lift = 0.7638 -- identical to the values already committed here.",
+      "grid_convergence_published": {
+        "elements": [
+          992,
+          3968,
+          15872,
+          63488,
+          253952
+        ],
+        "ux_of_A_e-3": [
+          0.022871,
+          0.022775,
+          0.022732,
+          0.022716,
+          0.022708
+        ],
+        "uy_of_A_e-3": [
+          0.8193,
+          0.82043,
+          0.82071,
+          0.82081,
+          0.82086
+        ],
+        "drag": [
+          14.2736,
+          14.29177,
+          14.29484,
+          14.29486,
+          14.29451
+        ],
+        "lift": [
+          0.76178,
+          0.76305,
+          0.76356,
+          0.7637,
+          0.76374
+        ],
+        "note": "The authors' own coarsest level is 992 elements. Their quoted reference is rounded from the finest levels, so a 3-level study starting near 1000 elements is a like-for-like comparison rather than an under-resolved one."
+      }
+    },
+    "kind": "published_benchmark",
+    "case_is_steady": "FSI1 is the steady member of the family; FSI2 and FSI3 develop self-excited oscillations."
+  },
+  "tolerance": {
+    "metric": "relative tip displacement error",
+    "value": 0.1,
+    "rationale": "Declared before execution and unchanged. 10% on the tip displacement is loose for a benchmark with five published grid levels, but ux of A is 2.27e-5 m on a 0.41 m channel and small absolute quantities are sensitive to the interface treatment; the drag, which is well conditioned, is reported alongside.",
+    "unchanged_since_declaration": true
+  },
+  "convergence": {
+    "levels": [
+      10,
+      20,
+      40
+    ],
+    "expected_order": null
+  },
+  "geometry": {
+    "channel_length_L": 2.5,
+    "channel_height_H": 0.41,
+    "cylinder_centre_C": [
+      0.2,
+      0.2
+    ],
+    "cylinder_radius_r": 0.05,
+    "flag_length_l": 0.35,
+    "flag_thickness_h": 0.02,
+    "flag_right_bottom_corner": [
+      0.6,
+      0.19
+    ],
+    "control_point_A_at_t0": [
+      0.6,
+      0.2
+    ],
+    "control_point_B": [
+      0.15,
+      0.2
+    ],
+    "deliberate_asymmetry": "The cylinder centre is at y = 0.2 while the channel centreline is at y = 0.205, so the configuration is intentionally NON-symmetric (section 2.4) to stop the onset of any oscillation depending on round-off. Do not 'tidy' this to 0.205.",
+    "point_B_discrepancy_in_the_paper": "Section 2.4 gives B = (0.15, 0.2); Table 1 gives B = (0.2, 0.2). The paper contradicts itself. (0.15, 0.2) is the front stagnation point on the cylinder surface and is the physically sensible choice for the pressure-difference quantity; (0.2, 0.2) is the cylinder CENTRE, which is inside the solid. Table 1 appears to be the typo, and it is almost certainly the origin of the secondary sources that mislabel point A as (0.2, 0.2). B is only used for delta-p and is not needed for the displacement anchor."
+  },
+  "parameters_fsi1": {
+    "solid_density": 1000.0,
+    "poissons_ratio": 0.4,
+    "shear_modulus_mu_s": 500000.0,
+    "youngs_modulus": 1400000.0,
+    "fluid_density": 1000.0,
+    "fluid_kinematic_viscosity": 0.001,
+    "mean_inlet_velocity_Ubar": 0.2,
+    "reynolds_number": 20,
+    "beta_density_ratio": 1,
+    "Ae": 35000.0,
+    "solid_constitutive_law": "St. Venant-Kirchhoff, eq. (5)-(6). NOT linear elasticity. At FSI1's deflection (0.82 mm over a 350 mm flag, 0.23%) the difference is small, but the benchmark specifies StVK and MOOSE's finite-strain path should be used rather than ComputeLinearElasticStress.",
+    "inflow": "v(0,y) = 1.5 * Ubar * 4.0/0.1681 * y*(0.41-y), parabolic, mean Ubar",
+    "outflow": "do-nothing / stress free, reference pressure set to zero mean",
+    "no_slip": "top and bottom walls, cylinder, and the fluid-structure interface",
+    "case_is_steady": "FSI1 reaches a steady state; FSI2 and FSI3 are periodic."
+  },
+  "staged_validation_available": {
+    "why_this_matters": "The paper supplies decoupled sub-benchmarks with their own reference values, so the fluid and solid solvers can each be validated BEFORE the coupling is attempted. This removes most of the risk from the FSI1 build: a failure can be localised instead of guessed at.",
+    "CFD1": {
+      "description": "rigid flag, Re = 20, fluid only, same geometry",
+      "reference": {
+        "drag": 14.29,
+        "lift": 1.119
+      },
+      "note": "Table 5. Validates the fluid half on the exact FSI1 mesh."
+    },
+    "CSM1": {
+      "description": "elastic beam alone under gravity g = 2, steady, no fluid",
+      "reference": {
+        "ux_of_A_e-3": -7.187,
+        "uy_of_A_e-3": -66.1
+      },
+      "parameters": {
+        "rho_s": 1000.0,
+        "nu_s": 0.4,
+        "mu_s": 500000.0,
+        "E": 1400000.0,
+        "g": 2.0
+      },
+      "note": "Table 9. Validates the solid half, and its deflection is 80x larger than FSI1's so it exercises the finite-strain path properly."
+    }
+  },
+  "staged_validation_results": {
+    "recorded": "2026-08-08",
+    "purpose": "Validate the fluid and solid halves separately, on the FSI1 mesh, BEFORE coupling anything -- so that a coupled failure can be localised instead of guessed at. Both sub-benchmarks have their own reference values in the paper.",
+    "CFD1": {
+      "status": "Three levels run; drag converging monotonically",
+      "reference": {
+        "drag": 14.29,
+        "lift": 1.119,
+        "table": "Table 5"
+      },
+      "levels": [
+        {
+          "nx_elements": 1614,
+          "drag": 14.032550373382,
+          "lift": 1.1474759442977,
+          "drag_rel_err": 0.018,
+          "lift_rel_err": 0.02545
+        },
+        {
+          "nx_elements": 6203,
+          "drag": 14.144105105723,
+          "lift": 1.1207105683465,
+          "drag_rel_err": 0.01021,
+          "lift_rel_err": 0.00153
+        },
+        {
+          "nx_elements": 24692,
+          "drag": 14.225263809054,
+          "lift": 1.1270090954228,
+          "drag_rel_err": 0.00453,
+          "lift_rel_err": 0.00716
+        }
+      ],
+      "sign_convention": "NodalSum of the saved momentum residual on the wetted surface returns the force the BODY exerts on the FLUID; the force on the body is its negation. The sign is fixed by physics, not by matching the reference: drag on a body in a channel flow must act downstream (+x), and the cylinder sits at y = 0.2 while the channel centreline is at 0.205, so the flow is faster above it and lift must act upward (+y). Both signs follow before any comparison with Table 5.",
+      "why_saved_residuals": "At a no-slip node the momentum residual is exactly the nodal reaction the fluid exerts. That avoids integrating a differentiated stress field and avoids hand-rolled surface normals -- the same reasoning that made SidesetReaction the right choice in T3-22 and the traction-integral gate the right check in T1-08.",
+      "discretization_note": "Deliberately the SAME scheme fsi_flat_channel.i uses -- scalar vel_x/vel_y/p, first order, equal-order with PSPG in INSMass and SUPG in INSMomentumLaplaceForm. An earlier draft used the INSAD vector family, which converged well but would have validated a fluid solver the coupled run does not use."
+    },
+    "CSM1": {
+      "status": "Three levels run; error decreases monotonically in both components",
+      "reference": {
+        "ux_of_A": -0.007187,
+        "uy_of_A": -0.0661,
+        "table": "Table 9",
+        "ux_of_A_e-3": -0.007187,
+        "uy_of_A_e-3": -0.0661
+      },
+      "levels": [
+        {
+          "level": 0,
+          "elements": 150,
+          "ux": -0.0049447312323399,
+          "uy": -0.054940163116975,
+          "ux_rel_err": 0.31199,
+          "uy_rel_err": 0.16883
+        },
+        {
+          "level": 1,
+          "elements": 570,
+          "ux": -0.0067411322651584,
+          "uy": -0.064032097840842,
+          "ux_rel_err": 0.06204,
+          "uy_rel_err": 0.03128,
+          "observed_order_ux": 2.42,
+          "observed_order_uy": 2.526
+        },
+        {
+          "level": 2,
+          "elements": 2395,
+          "ux": -0.0070275213750279,
+          "uy": -0.06536688039018,
+          "ux_rel_err": 0.02219,
+          "uy_rel_err": 0.01109,
+          "observed_order_ux": 1.432,
+          "observed_order_uy": 1.445
+        }
+      ],
+      "finest_level_resolution": "The 2395-element level initially stalled partway through the gravity ramp (DIVERGED_MAX_IT, then dt to dtmin). Mesh quality (minSICN min 0.60, mean 0.93, zero elements below 0.2), element type (2393 QUAD4, 2 TRI3) and load-step size (a 5x finer ramp fails at the same place) were each ruled out. The cause was Jacobian conditioning: automatic_scaling = true converges it in ~5 s. Scaling does not perturb the answer -- the 150- and 570-element results are unchanged to nine significant figures with it on -- so all three levels are now run from one input differing only in the mesh file. out/csm1_L2_noscaling.log is kept as the witness of the original stall.",
+      "solver_note": "automatic_scaling = true and line_search = none are required TOGETHER. Scaling with the default backtracking line search is worse than neither: the reported residual sits at 8.8e-8 while every step is rejected, even though the linear solve reaches 1e-16. A flat nonlinear residual under an exact linear solve means the step is being rejected, not that the Jacobian is wrong.",
+      "single_input_note": "csm1.i, run as: csm1.i Mesh/file/file=fsi1_L{0,1,2}.msh"
+    },
+    "scoring_status": "NEITHER sub-benchmark is a scored suite row. Reference values for CFD1 and CSM1 were declared before running, but NUMERIC TOLERANCES WERE NOT -- only the primary FSI1 tolerance (10% relative tip displacement) was pre-declared. Under protocol rule 3 that means these stages cannot carry a PASS/FAIL verdict without inventing a threshold after seeing the answer. They are reported as gates on the coupling, with the criterion stated below, and the observed errors are given so a reader can apply their own judgement.",
+    "gate_criterion": "Qualitative and checkable without a threshold: the error against the published value must DECREASE MONOTONICALLY under refinement in each reported component. That is a statement about the discretization converging to the right answer, and unlike a bare error magnitude it cannot be satisfied by a lucky coarse mesh. Both stages meet it -- CFD1 drag 1.80% -> 1.02% -> 0.45%, CSM1 uy 16.88% -> 3.13% -> 1.11% and ux 31.20% -> 6.20% -> 2.22%. CFD1 lift does NOT (2.55% -> 0.15% -> 0.72%); see cfd1_lift_caveat.",
+    "cfd1_lift_caveat": "Lift is not monotone: 2.55%, 0.15%, 0.72%. The L1 agreement is closer than L2 and should not be read as the better answer -- lift here is a small difference of large surface tractions on a body only 2.5 mm off the channel centreline, so it is far worse conditioned than drag and the coarse-level agreement is partly cancellation. Drag is the quantity that demonstrates convergence; lift is reported, not relied on."
+  },
+  "coupled_result": {
+    "recorded": "2026-08-08",
+    "status": "PASS on three levels; error decreases monotonically in both displacement components",
+    "scored": "worse of the two tip-displacement components at the finest level: 0.68% against the 10% tolerance declared before the case was built and never changed",
+    "levels": "1764 / 6773 / 27087 elements; ux 1.28 -> 0.83 -> 0.36%, uy 7.69 -> 1.15 -> 0.68%",
+    "independent_corroboration": "Drag and lift were not scored but agree to 0.12% and 0.92%. They are built from the cylinder no-slip reaction plus the clamp reaction at the weld, a construction derived from equilibrium before any comparison. A tip displacement that landed while the forces did not would have indicated a coupling error rather than a result.",
+    "principal_risk_retired": "The penalty interface coupling was recorded from the outset as the main risk, because penalty methods are mesh dependent and a refining mesh can start to leak. Measured interface slip is 3.51e-8, 3.56e-8 and 3.57e-8 across the three levels against a mean inlet velocity of 0.2 -- flat, not growing. The risk was measured, not argued away.",
+    "checkpointing_note": "The finest level takes about 5.5 hours. It was run twice: the first attempt was lost to a reboot because fsi1.i had no Checkpoint output. Checkpointing is now enabled and resume_fsi1.sh recovers correctly; see PAUSED.md."
+  }
+}

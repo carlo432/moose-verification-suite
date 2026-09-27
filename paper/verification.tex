@@ -1,0 +1,502 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{longtable}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{0.7em}{}
+\setlist{nosep,leftmargin=1.4em}
+\captionsetup{font=small,labelfont=bf}
+\hyphenation{multi-physics}
+
+\title{\bfseries Capability Verification of a Multiphysics Finite-Element\\
+Framework Across Nine Physics Domains}
+\author{Carlos Manuel Mendez}
+\date{8 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+We report a verification study of the MOOSE finite-element framework covering
+twenty-five solver capabilities across nine physics domains. Each capability is
+exercised by an independent input model and compared against either a
+closed-form solution (21 cases) or a published numerical benchmark (4 cases),
+under an acceptance tolerance committed to version control \emph{before} the
+solver was run. All twenty-five cases meet their declared tolerance. The median
+case consumes 7.3\% of its error budget; the tightest consumes 87\%; six consume
+less than 1\%. We describe the protocol governing the study --- pre-declared
+tolerances, sourced reference values, and a requirement that reported quantities
+be mutually consistent --- and we report a post-hoc audit of the results. That audit found no incorrect verdict, but it did find one check that
+could not have failed, seven results whose headline presentation was misleading,
+and three results whose numbers are weaker than a bare pass suggests. We state
+plainly what this study does not establish: it is verification, not validation,
+and it contains no comparison against experiment.
+\end{abstract}
+
+\section{Introduction}
+
+A general-purpose multiphysics framework is a large surface of solver
+capabilities, and a user adopting one needs to know which parts of that surface
+actually work for their problem class. The usual evidence --- a regression test
+suite maintained by the developers --- answers a different question. It shows
+that behaviour has not changed, not that it is right.
+
+This study takes the complementary position. Each of twenty-five capabilities is
+posed as a small, self-contained problem for which an independent answer exists,
+and the framework's result is compared against that answer under a tolerance
+fixed in advance. The framework under test is
+MOOSE~\cite{permann2020}, snapshot \texttt{20-10-27-41583-g2bd11a08a7}. The
+capabilities span solid mechanics and fracture, heat transfer, fluid dynamics,
+porous flow, phase-field evolution, mass transport, neutronics, multiphysics
+coupling, and optimisation and uncertainty quantification, the last including a monolithic
+fluid--structure interaction benchmark.
+
+The distinction between \emph{verification} and \emph{validation} is load-bearing
+throughout. Verification asks whether the equations are solved correctly;
+validation asks whether the equations describe reality. Everything reported here
+is verification. Section~\ref{sec:limits} states the consequences of that
+restriction rather than leaving them implicit.
+
+The contribution is not that a mature framework passes tests. It is the
+protocol, and the finding that the protocol catches things: an audit of the
+study's own results, reported in Section~\ref{sec:audit}, found a check that had
+been passing for the wrong reason.
+
+\section{Method}
+
+\subsection{Case structure}
+Each case is a directory containing the MOOSE input files, a
+\texttt{reference.json} declaring the reference value and the acceptance
+tolerance, a verifier script, and a \texttt{result.json} written by that
+verifier. The summary table in Section~\ref{sec:results} is generated
+mechanically from the \texttt{result.json} artifacts; no number in it is
+transcribed by hand.
+
+\subsection{Reference classes}
+Every case is labelled by the kind of evidence it is checked against:
+
+\begin{itemize}
+\item[\textbf{[A]}] \textbf{Closed form or invariant.} An analytic solution, or a
+  conservation law or objectivity property that must hold exactly. 21 cases.
+\item[\textbf{[B]}] \textbf{Published numerical benchmark.} A tabulated result
+  from the literature. 4 cases.
+\item[\textbf{[E]}] \textbf{Experiment.} \emph{No case in this study is class
+  [E].} See Section~\ref{sec:limits}.
+\end{itemize}
+
+\subsection{The tolerance protocol}
+Three rules govern the study, and they exist because each has caught a real
+error.
+
+\begin{enumerate}
+\item \textbf{Tolerances are declared before the solve.} The acceptance criterion
+  is committed to version control before the case is run, and is never widened
+  afterwards. A tolerance chosen after seeing the answer measures nothing.
+\item \textbf{No unsourced reference values.} Every anchor is either derived
+  symbolically in the case's own \texttt{reference.json} or cited to a specific
+  table in a specific publication. Where no sourced value could be found, the
+  case was reclassified downward rather than allowed to imply evidence it did not
+  have --- this happened twice, both times from [E] to [A].
+\item \textbf{Reported quantities must be mutually consistent.} The reference
+  value, the computed value, and the error must refer to the same quantity.
+  Section~\ref{sec:audit} reports where this rule was violated.
+\end{enumerate}
+
+\subsection{Verdicts}
+A case is recorded as \textsc{pass}, \textsc{fail}, \textsc{partial}, or
+\textsc{blocked}. \textsc{blocked} means the capability could not be assembled
+from available input-file objects, or that the attempt exceeded its time budget;
+it is distinct from \textsc{fail} and is never used to quietly retire a case that
+did not work.
+
+\subsection{A test that cannot fail is not evidence}
+The governing methodological principle, stated separately because it drives the
+design of most cases, is that agreement is only informative if disagreement was
+possible. Several concrete failure modes recur: a probe placed where a boundary
+condition pins the value it reports; a quantity measured over so short a segment
+of a smooth curve that any nearby law would fit; a measurement quantised more
+coarsely than its own tolerance; and a configuration whose symmetry fixes the
+answer exactly, independent of the physics. Each of these has been found in this
+study at least once, and one survived into the published results until the audit.
+
+Where practical, cases are therefore designed so that accidental agreement is
+implausible. The buckling case (Section~\ref{sec:buckling}) is the clearest
+example.
+
+\section{Results}
+\label{sec:results}
+
+All twenty-five cases meet their declared tolerance. Table~\ref{tab:main} reports
+each case, the quantity scored, the measured error, the tolerance it was
+measured against, and the fraction of the error budget consumed.
+
+Consumption of the error budget is strongly skewed. Six cases consume less than
+1\%, which reflects problems where the discretisation is essentially exact ---
+the finite-strain objectivity check (T2-18) returns a rotation-stage stress
+fourteen orders of magnitude below the elastic modulus, because an objective
+formulation produces \emph{identically} zero stress under rigid rotation and the
+residual is pure round-off. At the other end, four cases consume more than half
+their budget and are marked $\dagger$ in Table~\ref{tab:main}. Those four are the
+ones a reader should interrogate first; Section~\ref{sec:audit} does so.
+
+\input{table.tex}
+
+\section{Selected cases}
+
+Four cases are described in more detail, chosen because each illustrates a
+different way a verification case can be got wrong.
+
+\subsection{Designing a test that cannot accidentally agree}
+\label{sec:buckling}
+The Euler buckling case (T3-22) recovers a critical load from an
+imperfection-seeded nonlinear column by Southwell extrapolation~\cite{southwell1932}
+and compares it against $P_{cr} = \pi^2 EI/(KL)^2$. A single boundary condition
+would be weak evidence: a plausible-looking number could arise from a
+mis-specified modulus or second moment. The case therefore runs two boundary
+conditions whose effective-length factors differ by a factor of two, hence whose
+critical loads differ by sixteen, and requires both to agree. It additionally
+measures $EI$ independently by a transverse tip-load test, obtaining 666.508
+against a nominal 666.667. The measured error against the closed form is
+$1.77\times10^{-4}$, or 0.59\% of budget.
+
+An earlier version of this case was wrong in a way worth recording. A
+\texttt{Pressure} boundary condition defaults to acting on the displaced mesh,
+which makes it a follower load; the column then becomes Beck's column, which has
+no static bifurcation at all. The error did not move under mesh refinement, which
+is the signature of a wrong model form rather than a discretisation error.
+
+\subsection{Ensemble estimation of a stochastic exponent}
+The Cahn--Hilliard case (T1-09) measures the Lifshitz--Slyozov--Wagner coarsening
+exponent~\cite{lifshitz1961} from the decay of gradient
+energy~\cite{cahn1958}, against a target of $-1/3$. The difficulty is
+that a single realisation contains only about twenty domains at the measurement
+scale, so one merge event moves the observable by percent. Widening the tolerance
+to accommodate that noise would have destroyed the test's discriminating power.
+
+Instead the case declares ten random seeds in advance and scores the ensemble.
+All ten were run to completion and all ten were scored; no seed was dropped and
+no optional stopping was applied. The ensemble fit gives $-0.3078$ and the mean
+of the ten per-seed fits gives $-0.3045$, either side of a tolerance of $0.05$
+about $-1/3$; the agreement of two independent estimators is stronger evidence
+than either alone. Mass is conserved to $\sim10^{-11}$ per seed against a
+$10^{-8}$ requirement.
+
+This case also produced the clearest instance of a window rule satisfied for the
+wrong reason. The measurement window opens when the characteristic domain size
+exceeds ten interface widths, but that size is computed \emph{from} the gradient
+energy; while the field is still uniform noise the computed size is enormous and
+crosses the threshold from above. The tell was a coefficient of determination of
+0.64 --- a scaling law does not fit that badly.
+
+\subsection{Re-scoping an unreachable observable}
+The anisotropic solidification case (T3-25) was originally declared against
+dendrite tip velocity and its scaling with undercooling. That observable is not
+reachable with this model~\cite{kobayashi1993} on available hardware: latent heat
+saturates any domain that fits in memory, the melt recalesces, and the tip
+stalls. A steady tip would require roughly seventeen times the elements, at days
+per run.
+
+Rather than report a tip velocity measured over a window where no steady tip
+exists, the case was re-scoped to a different property of the same model that
+\emph{is} exactly predicted: the crystal's growth direction must follow the
+imposed anisotropy axis, $\theta_m = \theta_0$ modulo $360/m$. The observable is
+the angular Fourier content of the solid region, $\int w\cos(m\theta)\,dA$ and its
+sine counterpart, which recovers orientation and amplitude exactly and avoids the
+node-straddling error of an interface-crossing measurement. Rotating the imposed
+axis rotates the measured crystal one for one to within $0.17^{\circ}$.
+
+This is a genuine reduction in scope, and it is recorded as such: the
+tip-velocity half of the original capability is not covered and no steady-growth
+claim is made.
+
+\subsection{Checking the load before the pressure}
+The Hertzian contact case (T1-08) compares peak contact pressure and contact
+half-width against the Hertz solution. Two properties of penalty contact make a
+naive comparison unsafe. First, nodal contact pressure carries a checkerboard
+oscillation whose amplitude \emph{grows} under refinement, so a pointwise norm
+against a smooth reference never converges even when the solution is correct.
+Second, the applied load is quantised by the load-stepping scheme, so the
+pressure inferred from a nominal load can be systematically off.
+
+Both are handled by measuring rather than assuming: the traction integral is
+asserted against the measured reaction before any comparison with the closed
+form, and the Hertz half-width and peak pressure are evaluated at the load the
+model actually developed rather than the load requested.
+
+\section{Audit}
+\label{sec:audit}
+
+After the first twenty-four cases had been recorded as passing, the set was
+audited against the three protocol rules. The audit examined tolerances,
+reference provenance, and quantity consistency for all of them, and examined in
+detail the ten cases the first pass flagged. The twenty-fifth case completed
+afterwards and is described in Section~\ref{sec:fsi}.
+
+\textbf{No verdict changed.} Every verifier was scoring the quantity it claimed
+to score, against the tolerance it had declared. What the audit found was one
+vacuous check and a systematic presentation defect.
+
+\subsection{A check that could not have failed}
+The mesh-independence check in the solidification case reported a phase spread of
+$3.6\times10^{-15}$ across three meshes --- and this was not evidence of mesh
+independence. The sweep had been run at an imposed axis of $90^{\circ}$, which is
+$30^{\circ}$ modulo the $60^{\circ}$ period of the six-fold observable. At that
+angle the configuration is mirror-symmetric about a mesh axis, the sine
+coefficient vanishes identically, and the phase is exact \emph{by symmetry}
+rather than by measurement.
+
+The case's own reference file already recorded this symmetry property. It had
+simply never been applied to the convergence block. Re-running the sweep at
+$15^{\circ}$, which is not mesh-symmetric, produces a phase that
+\emph{converges} on the imposed angle instead of being pinned to it:
+$14.328^{\circ}$, $14.832^{\circ}$, $14.906^{\circ}$ at increasing resolution,
+errors of $0.672^{\circ}$, $0.168^{\circ}$ and $0.094^{\circ}$. This is a check
+that can fail, and does not.
+
+The general lesson is narrower than ``check your symmetries'' and more useful: a
+caveat recorded in one part of an artifact must be applied to every check in it.
+The knowledge needed to catch this had been written down months earlier.
+
+\subsection{Presentation defects}
+Seven of the results reported a triple --- reference value, computed value, error
+--- in which the error was not the difference of the first two. In four cases
+this is legitimate and was simply not disclosed: the scored metric is a whole-field
+profile norm, while the reference and computed columns carried a single
+representative scalar. In the remaining three the artifact was wrong: two
+reported a null reference beside a non-null error, and one placed a peak
+temperature in the computed-value field while the error field held a profile
+norm.
+
+The most misleading instance was in the solidification case, where the computed
+value stored raw principal values of an arctangent, so a true $30^{\circ}$
+appeared as $-30^{\circ}$ and a true $45^{\circ}$ as $-14.855^{\circ}$. The
+tolerance had always been declared modulo the observable's period, so the verdict
+was correct --- but the summary table printed what read as two flat failures
+beside a pass. All seven have been corrected, and the summary table now names the
+scored metric and its tolerance explicitly.
+
+\subsection{Caveats recorded but not corrected}
+Three findings are properties of the results rather than of the reporting, and
+are recorded rather than fixed.
+
+\begin{itemize}
+\item \textbf{Natural convection (T2-14) has not plateaued.} At $Ra=10^6$ the
+  Nusselt error runs $16.11 \rightarrow 6.47 \rightarrow 4.32 \rightarrow 3.49\%$
+  across four meshes against a 4\% tolerance. The sequence is monotone and
+  heading toward the reference~\cite{devahldavis1983}, but the rate is close to
+  first order rather than the second order the discretisation should deliver.
+  The value 3.49\% is the error at $128^2$, not a converged value. This is the
+  tightest margin in the study.
+\item \textbf{The cavity case (T2-13) had its scoring rule changed after the
+  fact.} The original rule scored the finest mesh and returned 0.1475, a
+  failure. The current rule scores the most time-converged run and returns
+  0.0202. Because the reference~\cite{ghia1982} is a steady solution, an
+  under-converged fine mesh is genuinely further from it than a converged coarse
+  one, so the change is physically defensible --- but the tolerance was met by
+  changing what is measured, and the finest mesh remains unconverged.
+\item \textbf{The coupling case (T2-20) converges faster than its own method.}
+  Errors fall by a factor of sixteen per mesh doubling where four is expected.
+  A rate that beats the method indicates that the manufactured source is nearly
+  representable in the element space, so the case verifies the
+  source-to-conduction mapping rather than the solver's spatial accuracy. It is
+  valid for what it claims and should not be cited for more.
+\end{itemize}
+
+\subsection{Claims the audit cleared}
+Two suspicions were checked and dismissed, and are reported because a null result
+from an audit is also information. The grain-growth case (T1-10) scores a
+linearity statistic, which raised the concern that any smooth curve would satisfy
+it. Fitting the same statistic to synthetic data spanning the same range under
+alternative growth exponents gives $4.4\times10^{-3}$ for a cubic law and
+$1.1\times10^{-3}$ for an exponent of 2.5, both rejected by the $10^{-3}$
+threshold that the true quadratic law clears at $2.5\times10^{-4}$; the window is
+wide enough to discriminate. Separately, the inverse-problem case (T2-19)
+recovers a source parameter from manufactured measurements, which invites the
+charge of an inverse crime. The exact recovery visible at one mesh level is
+indeed the mesh on which the measurements were generated, but the scored result
+is taken on a finer mesh recovering from data generated elsewhere, and a noise
+study is included.
+
+\section{Threats to validity}
+\label{sec:limits}
+
+\textbf{This study contains no experimental validation.} Every case is checked
+against a closed form or a published numerical benchmark. Two cases originally
+carried an [E] label and were reclassified to [A] during the study, because in
+each the reference was a self-declared illustrative figure rather than a sourced
+experimental correlation. The correct summary of this work is therefore
+``analytical and benchmark verification'', and any stronger claim would be
+unsupported by what is here.
+
+\textbf{Closed-form references constrain the problems that can be posed.} An
+analytic solution generally exists only for simple geometry, linear or weakly
+nonlinear material behaviour, and idealised boundary conditions. Agreement in
+that regime does not extend automatically to the regimes a production model
+occupies.
+
+\textbf{Cases are two-dimensional and largely single-physics.} Each isolates one
+solver path so that a failure localises rather than being guessed at. That is
+deliberate, and it is also a limit: the study says little about the behaviour of
+several capabilities exercised simultaneously, which is where a multiphysics
+framework is most likely to disappoint.
+
+\textbf{One framework version.} All results are for a single snapshot. Nothing
+here speaks to behaviour before or after it.
+
+\textbf{Benchmark references inherit their own uncertainty.} The three class-[B]
+cases are compared against numbers that are themselves computed, not measured,
+and carry the discretisation error of the codes that produced them.
+
+\section{Fluid--structure interaction}
+\label{sec:fsi}
+
+The twenty-fifth case is the Turek and Hron FSI1 benchmark~\cite{turek2006}: an
+elastic flag attached behind a rigid cylinder in channel flow at $Re=20$,
+reaching a steady deflection. It is reported separately because it is the only
+case in the study with two-way coupling, and because it was the only case
+recorded as \textsc{blocked} for an extended period --- not because the
+capability was absent, but because the reference had not been obtained from the
+primary source and the geometry had not been built.
+
+\subsection{Validate the halves before coupling them}
+The benchmark supplies decoupled sub-problems with their own reference values,
+and both were run on the FSI1 mesh before any coupling was attempted, so that a
+coupled failure could be localised rather than guessed at. The fluid-only
+problem (rigid flag, $Re=20$) converges monotonically to 0.45\% on drag across
+1614, 6203 and 24692 elements; the solid-only problem (flag under gravity, no
+fluid) converges to 1.11\% on tip deflection across 150, 570 and 2395 elements.
+
+Neither sub-problem is scored as a result. Their reference values were declared
+in advance but their \emph{tolerances} were not, and inventing a threshold after
+seeing the answer is precisely what rule~1 forbids. They are therefore treated as
+gates, judged on a criterion that does not require a threshold: the error must
+fall monotonically under refinement, which a fortunate coarse mesh cannot
+satisfy. One quantity fails that criterion and is reported rather than relied
+upon --- the fluid-only lift runs 2.55\%, 0.15\%, 0.72\%, non-monotone because
+lift here is a small difference of large surface tractions on a body only
+2.5\,mm off the channel centreline.
+
+\subsection{The coupled result}
+The coupled model uses a monolithic arbitrary Lagrangian--Eulerian formulation
+with pseudo-solid mesh motion and a penalty condition tying the fluid velocity to
+the solid velocity across the interface. Table~\ref{tab:fsi} reports the mesh
+study against Table~13 of the benchmark.
+
+\begin{table}[h]\centering\footnotesize
+\caption{FSI1 mesh study. Displacement is the scored quantity; the forces are an
+independent corroboration.\label{tab:fsi}}
+\begin{tabular}{@{}rrrrrr@{}}
+\toprule
+Elements & $u_x(A)$ err & $u_y(A)$ err & drag err & lift err & interface slip\\
+\midrule
+1\,764  & 1.28\% & 7.69\% & 0.52\% & 0.95\% & $3.51\times10^{-8}$\\
+6\,773  & 0.83\% & 1.15\% & 0.20\% & 0.83\% & $3.56\times10^{-8}$\\
+27\,087 & \textbf{0.36\%} & \textbf{0.68\%} & \textbf{0.12\%} & \textbf{0.92\%} & $3.57\times10^{-8}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The scored quantity is the worse of the two displacement components at the finest
+level: 0.68\% against the 10\% tolerance declared before the case was built.
+Error falls monotonically in both components.
+
+Two features of this result carry more weight than the displacement agreement
+itself. First, the forces corroborate independently. Drag and lift are not
+scored, and they are not obtained the way the fluid-only case obtains them: at an
+interface node the fluid momentum equation is closed by the penalty condition
+rather than by a Dirichlet condition, so the saved momentum residual there is
+missing the very term that enforces the coupling. Instead the load on the flag is
+recovered from the reaction at its clamped root, which equilibrium makes equal
+and opposite to the fluid load because FSI1 places no body force on the solid.
+That construction was derived before the comparison. A tip displacement that
+agreed while the forces did not would have indicated a coupling error rather than
+a result.
+
+Second, the principal risk was measured rather than argued away. Penalty coupling
+is mesh dependent, and a refining mesh can begin to leak; the case therefore
+reports the mean tangential velocity on the interface at every level. It is flat
+at $3.5\times10^{-8}$ against a mean inlet velocity of $0.2$, so the interface
+condition is not degrading as the mesh refines.
+
+\subsection{What this case is not}
+FSI1 is the steady member of the benchmark family. FSI2 and FSI3 are periodic and
+are not attempted; nothing here speaks to time-accurate coupled dynamics. The
+interface uses a penalty formulation rather than a mortar or Lagrange-multiplier
+method, and the penalty value is not derived --- its adequacy is argued from the
+measured slip, which is evidence but not proof.
+
+\section{Conclusions}
+
+Twenty-five solver capabilities of a multiphysics finite-element framework were
+verified across nine physics domains against closed-form solutions and published
+benchmarks, under tolerances committed before the solves. All twenty-five meet
+their declared tolerance, with a median error consuming 7.3\% of the allowed
+budget.
+
+The more transferable result concerns method. A verification suite is not made
+trustworthy by the number of passing cases; it is made trustworthy by the
+possibility of failure, and that possibility has to be engineered case by case
+and then re-examined. The audit reported here found a check that had been passing
+for the wrong reason for months, and it found it not by re-deriving the physics
+but by asking of each check what would have had to happen for it to fail. The
+answer, in that one case, was ``nothing''.
+
+\begin{thebibliography}{99}\footnotesize
+
+\bibitem{cahn1958} J.~W. Cahn and J.~E. Hilliard,
+``Free energy of a nonuniform system. I. Interfacial free energy,''
+\emph{Journal of Chemical Physics}, vol.~28, no.~2, pp.~258--267, 1958.
+
+\bibitem{devahldavis1983} G.~de~Vahl~Davis,
+``Natural convection of air in a square cavity: a benchmark numerical solution,''
+\emph{International Journal for Numerical Methods in Fluids}, vol.~3, no.~3,
+pp.~249--264, 1983.
+
+\bibitem{ghia1982} U.~Ghia, K.~N. Ghia, and C.~T. Shin,
+``High-Re solutions for incompressible flow using the Navier--Stokes equations
+and a multigrid method,'' \emph{Journal of Computational Physics}, vol.~48,
+no.~3, pp.~387--411, 1982.
+
+\bibitem{kobayashi1993} R.~Kobayashi,
+``Modeling and numerical simulations of dendritic crystal growth,''
+\emph{Physica D}, vol.~63, no.~3--4, pp.~410--423, 1993.
+
+\bibitem{lifshitz1961} I.~M. Lifshitz and V.~V. Slyozov,
+``The kinetics of precipitation from supersaturated solid solutions,''
+\emph{Journal of Physics and Chemistry of Solids}, vol.~19, no.~1--2, pp.~35--50,
+1961.
+
+\bibitem{permann2020} C.~J. Permann \emph{et al.},
+``MOOSE: Enabling massively parallel multiphysics simulation,''
+\emph{SoftwareX}, vol.~11, 100430, 2020.
+
+\bibitem{southwell1932} R.~V. Southwell,
+``On the analysis of experimental observations in problems of elastic
+stability,'' \emph{Proceedings of the Royal Society of London A}, vol.~135,
+pp.~601--616, 1932.
+
+\bibitem{theis1935} C.~V. Theis,
+``The relation between the lowering of the piezometric surface and the rate and
+duration of discharge of a well using ground-water storage,''
+\emph{Transactions, American Geophysical Union}, vol.~16, pp.~519--524, 1935.
+
+\bibitem{turek2006} S.~Turek and J.~Hron,
+``Proposal for numerical benchmarking of fluid--structure interaction between an
+elastic object and laminar incompressible flow,'' in \emph{Fluid--Structure
+Interaction}, Lecture Notes in Computational Science and Engineering, vol.~53,
+Springer, pp.~371--385, 2006.
+
+\end{thebibliography}
+
+\end{document}

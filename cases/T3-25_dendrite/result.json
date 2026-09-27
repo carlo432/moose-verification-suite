@@ -1,0 +1,211 @@
+{
+  "case_id": "T3-25_dendrite",
+  "capability": "Anisotropic solidification: growth-direction selection",
+  "validation_class": "A",
+  "units": "degrees",
+  "tolerance": {
+    "metric": "maximum absolute error of the measured arm direction against reference_angle, modulo 360/m, over the rotation sweep",
+    "value": 2.0
+  },
+  "reference_value": [
+    0,
+    15,
+    30,
+    45
+  ],
+  "moose_value": [
+    5.9685589803848416e-12,
+    14.832001877716934,
+    30.0,
+    45.14498093670569
+  ],
+  "error": {
+    "absolute": 0.1679981222830662,
+    "relative": null
+  },
+  "phase_mesh_sweep_at_15deg": [
+    {
+      "nx": 48,
+      "phase_deg": 14.3276723441628,
+      "amplitude_on_mode": 0.03291049599273056
+    },
+    {
+      "nx": 96,
+      "phase_deg": 14.832001877716934,
+      "amplitude_on_mode": 0.033252184493699787
+    },
+    {
+      "nx": 144,
+      "phase_deg": 14.905993955986858,
+      "amplitude_on_mode": 0.03242395033162642
+    }
+  ],
+  "convergence": {
+    "levels": [
+      {
+        "nx": 48,
+        "phase_deg": -30.0,
+        "amplitude_on_mode": 0.031729864407214765,
+        "amplitude_off_mode": 0.00538169604806296
+      },
+      {
+        "nx": 96,
+        "phase_deg": -30.0,
+        "amplitude_on_mode": 0.03204717607829749,
+        "amplitude_off_mode": 0.0017048197815113203
+      },
+      {
+        "nx": 144,
+        "phase_deg": -29.999999999999996,
+        "amplitude_on_mode": 0.032152595590221066,
+        "amplitude_off_mode": 0.0007575329947580014
+      }
+    ],
+    "phase_spread_deg": 0.5043295335541345,
+    "observed_order": null,
+    "expected_order": null
+  },
+  "anisotropy_diagnostic": {
+    "observable": "theta_m = atan2(S_m, C_m)/m is the arm direction and a_m = sqrt(C_m^2+S_m^2)/area is the m-fold shape amplitude, from C_m = integral w cos(m theta) dA and S_m = integral w sin(m theta) dA taken about the seed centre. Both m = 4 and m = 6 are always computed so the off-mode channel is measured rather than assumed.",
+    "measured_at": "the first step at which the solid area reaches 3x its initial value. Fixed in advance and geometric: it is late enough for the shape to develop and early enough to precede recalescence.",
+    "rotation_sweep": [
+      {
+        "reference_angle": 0,
+        "phase_deg": 5.969428812999887e-12,
+        "error_deg": 5.9685589803848416e-12,
+        "amplitude": 0.03520297466511513,
+        "phase_drift_deg": 3.9186431877169525e-12
+      },
+      {
+        "reference_angle": 15,
+        "phase_deg": 14.832001877716936,
+        "error_deg": 0.1679981222830662,
+        "amplitude": 0.033252184493699787,
+        "phase_drift_deg": 0.08629091412241863
+      },
+      {
+        "reference_angle": 30,
+        "phase_deg": -30.0,
+        "error_deg": 0.0,
+        "amplitude": 0.03204717607830122,
+        "phase_drift_deg": 2.8780533511962858e-11
+      },
+      {
+        "reference_angle": 45,
+        "phase_deg": -14.855019063294305,
+        "error_deg": 0.1449809367056929,
+        "amplitude": 0.034072884711852894,
+        "phase_drift_deg": 0.059915493854234114
+      }
+    ],
+    "rotation_slope": 1.0040196062158815,
+    "mode_selection": {
+      "mode_number_4_phase_deg": -3.187687980479339e-14,
+      "expected_mod_90": 0,
+      "error_deg": 2.842170943040401e-14,
+      "a4": 0.03865199537344677,
+      "a6": 0.0005147448065057444
+    },
+    "isotropic_null": {
+      "amplitude_at_delta_0": 0.0005133645388982136,
+      "amplitude_at_delta_0p04": 0.03204717607829749,
+      "ratio": 0.016019025752658022
+    },
+    "off_mode": {
+      "ratios": {
+        "mesh048": 0.16960980289721203,
+        "mesh096": 0.05319719208163969,
+        "mesh144": 0.0235605549366098,
+        "mode4": 0.013317418713636836
+      },
+      "decreases_with_refinement": true,
+      "note": "The square mesh imprints a four-fold bias on a circle. It is distinguished from physics by refinement, the same test used on the T1-08 contact checkerboard."
+    },
+    "recalescence": {
+      "note": "T_max crosses T_e partway through every run. Past that point the driving force atan(gamma(T_e - T)) is negative, the grain melts, and because melting is fastest where growth was slowest the shape inverts by exactly half a lobe -- the m=4 phase steps 0 -> -45 degrees. Every measurement here is taken before that, as the declared measured_at requires.",
+      "by_run": {
+        "rot000": {
+          "recalescence_time": 0.0105,
+          "measurement_time": 0.0065,
+          "T_max_at_measurement": 0.92382989735451
+        },
+        "rot015": {
+          "recalescence_time": 0.0105,
+          "measurement_time": 0.0055,
+          "T_max_at_measurement": 0.86757047749366
+        },
+        "rot030": {
+          "recalescence_time": 0.0109375,
+          "measurement_time": 0.0049375,
+          "T_max_at_measurement": 0.82318693521569
+        },
+        "rot045": {
+          "recalescence_time": 0.01,
+          "measurement_time": 0.006,
+          "T_max_at_measurement": 0.90613273350351
+        },
+        "mode4": {
+          "recalescence_time": 0.01,
+          "measurement_time": 0.006,
+          "T_max_at_measurement": 0.90430416770846
+        },
+        "null": {
+          "recalescence_time": 0.01,
+          "measurement_time": 0.006,
+          "T_max_at_measurement": 0.90585251518654
+        },
+        "mesh048": {
+          "recalescence_time": 0.01,
+          "measurement_time": 0.006,
+          "T_max_at_measurement": 0.90988392675191
+        },
+        "mesh096": {
+          "recalescence_time": 0.0104375,
+          "measurement_time": 0.0049375,
+          "T_max_at_measurement": 0.82318693521569
+        },
+        "mesh144": {
+          "recalescence_time": 0.010859375,
+          "measurement_time": 0.004859375,
+          "T_max_at_measurement": 0.79352423448899
+        },
+        "m15_048": {
+          "recalescence_time": 0.0105,
+          "measurement_time": 0.0055,
+          "T_max_at_measurement": 0.87177222228689
+        },
+        "m15_096": {
+          "recalescence_time": 0.0105,
+          "measurement_time": 0.0055,
+          "T_max_at_measurement": 0.86757047749366
+        },
+        "m15_144": {
+          "recalescence_time": 0.0110625,
+          "measurement_time": 0.0045625,
+          "T_max_at_measurement": 0.7880281441818
+        }
+      }
+    },
+    "symmetry_caveat": "reference_angle 0 and 30 give S_6 identically zero (order 1e-18) because the configuration is mirror-symmetric about the mesh axis, so those two phases are exact by symmetry rather than by measurement. The informative rotation points are 15 and 45 degrees, which are not mesh-symmetric.",
+    "observable_correction": {
+      "what_was_wrong": "The declared observable was the dendrite tip velocity and its scaling with undercooling. This Kobayashi parameter set does not have a steady tip velocity in any domain that fits on this machine. With the insulated 0.7 box the tip decelerated 14.1 -> 1.6 across the window; with a 1.05 quarter-symmetry domain and a Dirichlet far field it decelerates 15.5 -> 10.7 and then STALLS at 0.357 while the melt at x = 0.70 recalesces to T = 0.98. Latent heat with K = 1.8 saturates the domain faster than a boundary sink can drain it. A steady tip needs the thermal layer thin against the domain, roughly L = 3-4 at the same dx, i.e. nx = 300-400: about 17x the elements with LU scaling worse than linearly, days per run for five runs.",
+      "window_error_found": "The declared window [0.45, 0.58] was in ABSOLUTE mesh coordinates, where the seed sat at x = 0.35 -- it means 0.10 to 0.23 FROM THE SEED CENTRE. The superseded verify.py defines SEED_X = 0.35 and never uses it. So the window began at 1.25x the initial seed radius and ended at 2.9x, spanning the first 10% of the run while the seed was still relaxing off its initial condition. Scored correctly on the far-field data it gives R^2 = 0.9958 against the declared 0.98 -- but that is a short segment of a smooth decelerating curve looking straight, not a steady velocity. The check could not fail, which is the same defect as the coarse load quantization caught in T1-05.",
+      "what_replaces_it": "The orientation of growth, which this model predicts exactly. The interfacial parameter is eps(theta) = eps_bar [1 + delta cos(m (theta - theta_0))], so the grain must acquire an m-fold shape locked to theta_0. The observable is the angular Fourier content of the solid region: amplitude a_m = sqrt(C_m^2 + S_m^2)/area and phase theta_m = atan2(S_m, C_m)/m, with C_m = integral w cos(m theta) dA about the seed centre. These are volume integrals, so the measurement does not inherit the node-straddling error of an interface crossing.",
+      "what_is_given_up": "The 'dendrite-growth scaling' half of checklist item 5.3. No tip velocity, no LGK scaling exponent and no steady-state growth claim is made. The retained qualitative result -- tip velocity rises monotonically with undercooling -- is reported as a diagnostic only. This is a genuine reduction in scope and is Carlos's call to accept or reject.",
+      "geometry_correction": "The far-field runs used a quarter-symmetry domain, justified in writing as 'zero flux on x=0 and y=0 IS the four-fold symmetry condition'. That was wrong: mode_number defaults to SIX in this build, and mirror planes at 90 degrees impose four-fold symmetry on a six-fold model. The re-scoped case uses a FULL domain with the seed at the centre.",
+      "recorded": "2026-08-07, before the sweep below"
+    }
+  },
+  "checks": {
+    "arm_direction_exact": true,
+    "rotation_slope_unity": true,
+    "isotropic_null": true,
+    "off_mode_suppressed": true,
+    "mesh_independent_phase": true,
+    "mode_selection_4fold": true,
+    "measured_before_recalescence": true
+  },
+  "verdict": "PASS",
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7"
+}

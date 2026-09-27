@@ -1,0 +1,10 @@
+{
+  "case_id":"T2-21_stefan_problem",
+  "capability":"One-phase Stefan melting with apparent heat capacity",
+  "checklist_item":"2.3",
+  "validation_class":"A",
+  "quantity":{"name":"melt-front position","symbol":"X(t)","units":"length","latent_heat":{"Lf":0.212862645754,"units":"energy per volume","derivation":"The Gaussian apparent-capacity excess Lf/(sigma*sqrt(pi))*exp(-((T-Tm)/sigma)^2) integrates to Lf over temperature."}},
+  "reference":{"value":0.000850412284775067,"uncertainty":null,"kind":"closed_form","source":"Two-phase Stefan similarity solution for the declared hot boundary, initial temperature, melting temperature, conductivity, heat capacity, and latent heat","derivation":"Because the input starts the solid at Ti=1.0<Tm=1.5, the one-phase Ti=Tm formula is inapplicable. With equal properties on both sides, solve sqrt(pi)*lambda*exp(lambda^2)=Ste_l/erf(lambda)-Ste_s/erfc(lambda), where Ste_l=cp*(Th-Tm)/Lf=Ste_s=cp*(Tm-Ti)/Lf=2.34893256; lambda=0.4252061424. Then X(t)=2*lambda*sqrt(alpha*t), alpha=k/(rho cp)=1e-4, t=0.01, giving X=0.000850412285 m.","confirmed_from":"Independent scipy.special.erf, scipy.special.erfc, and scipy.optimize.brentq derivation; corrected in a separate reference commit because the original one-phase anchor omitted sensible heating of the initial solid."},
+  "tolerance":{"metric":"relative front-position error","value":0.02,"rationale":"Declared before solve; mushy-width sensitivity is reported separately."},
+  "convergence":{"expected_order":null,"refinement_levels":3,"note":"Mushy widths 0.2, 0.1, 0.05 are compared; timestep is fixed small enough for front resolution."}
+}

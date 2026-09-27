@@ -1,0 +1,39 @@
+{
+  "case_id": "T1-06_power_law_creep",
+  "capability": "Power-law secondary creep",
+  "checklist_item": "1.2",
+  "validation_class": "A",
+  "parameters": {
+    "coefficient_A": 1e-6,
+    "stress_exponent_n": 3.0,
+    "activation_energy_J_per_mol": 50000.0,
+    "gas_constant_J_per_molK": 8.314,
+    "temperatures_K": [800.0, 1000.0, 1200.0],
+    "stresses_MPa": [50.0, 100.0, 150.0],
+    "end_time_s": 10.0
+  },
+  "quantity": {
+    "name": "uniaxial secondary-creep strain and recovered Norton parameters",
+    "symbol": "epsilon_dot, A, n, Q",
+    "units": "strain, MPa, dimensionless, J/mol"
+  },
+  "reference": {
+    "value": 0.024444078598495237,
+    "uncertainty": null,
+    "kind": "closed_form",
+    "source": "Norton law at constant stress and temperature: epsilon_dot = A sigma^n exp[-Q/(R T)], so epsilon_creep(t)=epsilon_dot t.",
+    "derivation": "README.md and verify.py",
+    "confirmed_from": "Evaluated independently for A=1e-6, n=3, Q=50000 J/mol, sigma=100 MPa, T=1000 K, t=10 s."
+  },
+  "tolerance": {
+    "metric": "relative error in the 100 MPa, 1000 K final creep strain",
+    "value": 0.01,
+    "rationale": "One percent allows time integration and nonlinear solve error; parameter-regression tolerances are stated separately and are not tuned to any single run."
+  },
+  "convergence": {
+    "expected_order": 1.0,
+    "refinement_levels": 3,
+    "temporal_order_tolerance": 0.2,
+    "parameter_regression_relative_tolerances": {"A": 0.02, "n": 0.01, "Q": 0.02}
+  }
+}

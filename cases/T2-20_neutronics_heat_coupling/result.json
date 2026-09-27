@@ -1,0 +1,45 @@
+{
+  "case_id": "T2-20_neutronics_heat_coupling",
+  "capability": "Neutronics-shaped heat source to conduction",
+  "validation_class": "A",
+  "reference_value": 0.0,
+  "moose_value": 1.845445815122699e-10,
+  "units": "relative L2 (reference is zero)",
+  "peak_temperature_K": 2259.912591722363,
+  "error": {
+    "absolute": 1.845445815122699e-10,
+    "relative": 1.845445815122699e-10
+  },
+  "tolerance": {
+    "metric": "relative profile L2 error",
+    "value": 0.01,
+    "rationale": "Declared before solve; this case verifies source-to-conduction mapping, not a full eigenvalue/feedback loop."
+  },
+  "convergence": {
+    "levels": [
+      {
+        "nx": 20,
+        "relative_L2_error": 4.719907709753036e-08,
+        "peak_temperature": 2259.91265071941
+      },
+      {
+        "nx": 40,
+        "relative_L2_error": 2.950407781298801e-09,
+        "peak_temperature": 2259.9125951898627
+      },
+      {
+        "nx": 80,
+        "relative_L2_error": 1.845445815122699e-10,
+        "peak_temperature": 2259.912591722363
+      }
+    ],
+    "observed_order": null,
+    "expected_order": 2.0
+  },
+  "verdict": "PASS",
+  "runtime_s": 0.0,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "notes": "A cosine-plus-uniform heat source is solved on three meshes against the integrated closed form; finest relative L2 profile error is 1.85e-10. The source is an analytic stand-in for a normalized eigenflux, not a live eigenvalue-to-thermal transfer, so the result is limited to the conduction coupling path.",
+  "limitations": "No live T1-11 eigenvector transfer, power normalization reporter, or feedback on cross sections; fixed analytic source used."
+}

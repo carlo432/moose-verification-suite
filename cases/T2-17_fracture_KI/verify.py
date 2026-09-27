@@ -1,0 +1,10 @@
+import json,pathlib,re
+import numpy as np,pandas as pd
+import matplotlib.pyplot as plt
+ROOT=pathlib.Path(__file__).parent; REF=json.loads((ROOT/'reference.json').read_text()); ref=float(REF['reference']['value']); levels=[]
+for f in sorted(ROOT.joinpath('out').glob('j_r?.csv')):
+    r=int(f.stem.split('r')[-1]); j=pd.read_csv(f).iloc[-1]; Js=[float(j[f'J_{i}']) for i in range(1,6)]; mean=float(np.mean(Js)); levels.append({'refinement':r,'J_mean':mean,'relative_error':abs(mean/ref-1),'contour_spread':float(np.ptp(Js)/mean)})
+levels.sort(key=lambda x:x['refinement']); finest=levels[-1];
+plt.figure(figsize=(6,4)); plt.plot([x['refinement'] for x in levels],[x['J_mean'] for x in levels],'o-',label='mean J'); plt.axhline(ref,color='k',ls='--',label='NAFEMS reference'); plt.xlabel('uniform refinement level'); plt.ylabel('J'); plt.legend(); plt.tight_layout(); plt.savefig(ROOT/'figures'/'J_mesh_refinement.png',dpi=150); plt.close()
+result={'case_id':REF['case_id'],'capability':REF['capability'],'validation_class':'B','reference_value':ref,'moose_value':finest['J_mean'],'units':'force/length','error':{'absolute':abs(finest['J_mean']-ref),'relative':finest['relative_error']},'tolerance':REF['tolerance'],'convergence':{'levels':levels,'observed_order':None,'expected_order':None},'verdict':'PASS' if finest['relative_error']<REF['tolerance']['value'] else 'FAIL','runtime_s':0.0,'ranks':1,'moose_version':'snapshot-20-10-27-41583-g2bd11a08a7','notes':f"The NAFEMS numerical benchmark J-integral is now run at three uniform refinement levels. Finest mean J={finest['J_mean']:.9g}, relative error={finest['relative_error']:.4g}, and contour spread={finest['contour_spread']:.4g}. The interaction-integral companion runs at the same refinements but is not used to hide the J discrepancy.",'limitations':'NAFEMS crack seed rather than the planned SENT geometry; no verified Tada/Paris/Irwin K_I polynomial or independent J-to-K conversion reported.'}
+(ROOT/'result.json').write_text(json.dumps(result,indent=2)+'\n'); print(json.dumps(result,indent=2))

@@ -1,0 +1,102 @@
+{
+  "case_id": "T3-24_fsi",
+  "capability": "Fluid-structure interaction benchmark FSI1",
+  "validation_class": "B",
+  "reference_value": [
+    2.27e-05,
+    0.0008209
+  ],
+  "moose_value": [
+    2.2618319299024e-05,
+    0.00081528928222358
+  ],
+  "units": "m",
+  "error": {
+    "absolute": 5.610717776419975e-06,
+    "relative": 0.00683483710125469
+  },
+  "tolerance": {
+    "metric": "relative tip displacement error",
+    "value": 0.1,
+    "rationale": "Declared before execution and unchanged. 10% on the tip displacement is loose for a benchmark with five published grid levels, but ux of A is 2.27e-5 m on a 0.41 m channel and small absolute quantities are sensitive to the interface treatment; the drag, which is well conditioned, is reported alongside."
+  },
+  "convergence": {
+    "levels": [
+      {
+        "level": 0,
+        "elements": 1764,
+        "end_time": 12.0,
+        "ux": 2.2410098486564e-05,
+        "uy": 0.00075778449214746,
+        "ux_rel_err": 0.012770991781321525,
+        "uy_rel_err": 0.07688574473448648,
+        "drag": 14.3687417375309,
+        "lift": 0.75651461096398,
+        "drag_rel_err": 0.005158568557600589,
+        "lift_rel_err": 0.009538346472924916,
+        "uy_change_per_step": 1.699254235368e-09,
+        "interface_slip": 3.5089730766557e-08
+      },
+      {
+        "level": 1,
+        "elements": 6773,
+        "end_time": 12.0,
+        "ux": 2.2511492626845e-05,
+        "uy": 0.00081148331975772,
+        "ux_rel_err": 0.008304289566299587,
+        "uy_rel_err": 0.01147116608878058,
+        "drag": 14.266372229256,
+        "lift": 0.77015544291323,
+        "drag_rel_err": 0.0020026422346275173,
+        "lift_rel_err": 0.008320820781919324,
+        "uy_change_per_step": 1.9229441722756e-09,
+        "interface_slip": 3.5557172861241e-08
+      },
+      {
+        "level": 2,
+        "elements": 27087,
+        "end_time": 12.0,
+        "ux": 2.2618319299024e-05,
+        "uy": 0.00081528928222358,
+        "ux_rel_err": 0.0035982687654624776,
+        "uy_rel_err": 0.00683483710125469,
+        "drag": 14.2781972330022,
+        "lift": 0.77082463152495,
+        "drag_rel_err": 0.001175429660566673,
+        "lift_rel_err": 0.009196951459740666,
+        "uy_change_per_step": 1.9926248645899e-09,
+        "interface_slip": 3.5749817175665e-08
+      }
+    ],
+    "observed_order": null,
+    "expected_order": null
+  },
+  "forces_reported_not_scored": {
+    "drag": 14.2781972330022,
+    "drag_reference": 14.295,
+    "drag_rel_err": 0.001175429660566673,
+    "lift": 0.77082463152495,
+    "lift_reference": 0.7638,
+    "lift_rel_err": 0.009196951459740666,
+    "why_not_scored": "The declared tolerance is on tip displacement. Drag and lift are an INDEPENDENT corroboration: they are built from the cylinder no-slip reaction plus the clamp reaction at the weld, which equilibrium makes equal and opposite to the fluid load on the flag since FSI1 puts no body force on the solid. The construction was derived before the comparison, not tuned to it. At an interface node the saved fluid momentum residual is NOT usable -- the equation there is closed by the penalty InterfaceKernel, whose contribution that residual does not see."
+  },
+  "guards": {
+    "steady_max": 1e-06,
+    "uy_change_per_step": 1.9926248645899e-09,
+    "slip_max": 1e-05,
+    "interface_slip": 3.5749817175665e-08,
+    "note": "Guards, not scored criteria. They were not part of the pre-declared tolerance; they prevent scoring an unconverged transient or a leaking interface."
+  },
+  "checks": {
+    "tip_displacement_within_tolerance": true,
+    "all_levels_reached_end_time": true,
+    "steady_at_final_step": true,
+    "interface_not_leaking": true,
+    "error_decreases_under_refinement": true
+  },
+  "verdict": "PASS",
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "notes": "Monolithic ALE coupling on the Turek & Hron FSI1 geometry, three mesh levels. Finest (27087 elements) gives ux = 2.2618e-05 m (0.36%) and uy = 8.1529e-04 m (0.68%) against Table 13, scored on the worse of the two at 0.68% versus a 10% tolerance declared before the case was built. Error falls monotonically in both components. Drag and lift corroborate independently at 0.12% and 0.92%. The fluid and solid halves were validated separately on this same mesh (CFD1, CSM1) before coupling, so a failure here would have been localisable; see staged_validation_results.",
+  "limitations": "FSI1 only -- the steady member of the benchmark family. FSI2 and FSI3 are periodic and are not attempted. Penalty interface coupling rather than a mortar or Lagrange-multiplier formulation; the penalty value is not derived, and its adequacy is argued from the measured interface slip rather than from theory. Two-dimensional."
+}

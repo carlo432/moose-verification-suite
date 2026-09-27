@@ -1,0 +1,104 @@
+{
+  "case_id": "T3-25_dendrite",
+  "capability": "Anisotropic solidification: growth-direction selection",
+  "checklist_item": "5.3",
+  "validation_class": "A",
+  "quantity": {
+    "name": "orientation and order of the anisotropic growth shape",
+    "symbol": "theta_m, a_m",
+    "units": "degrees, dimensionless",
+    "observable": "theta_m = atan2(S_m, C_m)/m is the arm direction and a_m = sqrt(C_m^2+S_m^2)/area is the m-fold shape amplitude, from C_m = integral w cos(m theta) dA and S_m = integral w sin(m theta) dA taken about the seed centre. Both m = 4 and m = 6 are always computed so the off-mode channel is measured rather than assumed.",
+    "measured_at": "the first step at which the solid area reaches 3x its initial value. Fixed in advance and geometric: it is late enough for the shape to develop and early enough to precede recalescence."
+  },
+  "reference": {
+    "kind": "closed_form",
+    "law": "theta_m = theta_0  (modulo 360/m);  a_m = 0 when delta = 0",
+    "derivation": "For a shape R(theta) = R0[1 + a cos(m(theta - theta_0))], integral w cos(m theta) dA = pi R0^2 a cos(m theta_0) and likewise for sin, so atan2(S_m,C_m)/m recovers theta_0 exactly and sqrt(C^2+S^2)/area recovers a. With delta = 0 the model is isotropic and every m-fold amplitude must vanish.",
+    "why_this_is_class_A": "The expected answers are exact and are set by the input parameters, not by a correlation: rotating reference_angle by X must rotate the measured phase by exactly X, setting mode_number to m must put the signal in the m-th channel, and delta = 0 must give a circle. The rotation test is also sign-convention independent, so it does not depend on knowing whether arms grow along maximum or minimum interfacial stiffness."
+  },
+  "tolerance": {
+    "metric": "maximum absolute error of the measured arm direction against reference_angle, modulo 360/m, over the rotation sweep",
+    "value": 2.0,
+    "units": "degrees",
+    "rationale": "Declared before the sweep. 2 degrees is well inside the ~7.5 degree half-width of a 6-fold lobe, so it is a real constraint on orientation, not a formality."
+  },
+  "convergence": {
+    "rotation_sweep_reference_angle_deg": [
+      0,
+      15,
+      30,
+      45
+    ],
+    "mode_numbers": [
+      4,
+      6
+    ],
+    "mesh_levels_nx": [
+      48,
+      96,
+      144
+    ],
+    "null_test": "anisotropy_strength = 0",
+    "expected_order": null
+  },
+  "secondary_tolerances": {
+    "rotation_slope": {
+      "value": 0.05,
+      "metric": "absolute error of the fitted slope of measured phase against reference_angle, expected 1",
+      "rationale": "Rotating the anisotropy must rotate the crystal one for one. This is the sharpest statement the model makes and it is independent of any sign convention."
+    },
+    "isotropic_null": {
+      "value": 0.1,
+      "metric": "ratio of the m-fold amplitude at delta = 0 to the amplitude at delta = 0.04",
+      "rationale": "With no anisotropy the grain must stay circular. Whatever amplitude survives is numerical, and it must be at least ten times smaller than the physical signal or the signal is not resolved."
+    },
+    "off_mode_suppression": {
+      "value": 0.33,
+      "metric": "ratio of the off-mode amplitude to the on-mode amplitude (a_4/a_6 when mode_number=6, a_6/a_4 when mode_number=4)",
+      "rationale": "The square mesh imprints a four-fold bias on a circle, so the off-mode channel is never exactly zero. Requiring it below a third of the on-mode signal makes the selected mode unambiguous.",
+      "additional_requirement": "The off-mode amplitude must also DECREASE under mesh refinement while the on-mode amplitude converges. That is what distinguishes a mesh artefact from physics, the same test used on the T1-08 contact checkerboard."
+    },
+    "mesh_independence_phase": {
+      "value": 2.0,
+      "units": "degrees",
+      "metric": "spread of the measured arm direction across nx = 48, 96, 144"
+    }
+  },
+  "observable_correction": {
+    "what_was_wrong": "The declared observable was the dendrite tip velocity and its scaling with undercooling. This Kobayashi parameter set does not have a steady tip velocity in any domain that fits on this machine. With the insulated 0.7 box the tip decelerated 14.1 -> 1.6 across the window; with a 1.05 quarter-symmetry domain and a Dirichlet far field it decelerates 15.5 -> 10.7 and then STALLS at 0.357 while the melt at x = 0.70 recalesces to T = 0.98. Latent heat with K = 1.8 saturates the domain faster than a boundary sink can drain it. A steady tip needs the thermal layer thin against the domain, roughly L = 3-4 at the same dx, i.e. nx = 300-400: about 17x the elements with LU scaling worse than linearly, days per run for five runs.",
+    "window_error_found": "The declared window [0.45, 0.58] was in ABSOLUTE mesh coordinates, where the seed sat at x = 0.35 -- it means 0.10 to 0.23 FROM THE SEED CENTRE. The superseded verify.py defines SEED_X = 0.35 and never uses it. So the window began at 1.25x the initial seed radius and ended at 2.9x, spanning the first 10% of the run while the seed was still relaxing off its initial condition. Scored correctly on the far-field data it gives R^2 = 0.9958 against the declared 0.98 -- but that is a short segment of a smooth decelerating curve looking straight, not a steady velocity. The check could not fail, which is the same defect as the coarse load quantization caught in T1-05.",
+    "what_replaces_it": "The orientation of growth, which this model predicts exactly. The interfacial parameter is eps(theta) = eps_bar [1 + delta cos(m (theta - theta_0))], so the grain must acquire an m-fold shape locked to theta_0. The observable is the angular Fourier content of the solid region: amplitude a_m = sqrt(C_m^2 + S_m^2)/area and phase theta_m = atan2(S_m, C_m)/m, with C_m = integral w cos(m theta) dA about the seed centre. These are volume integrals, so the measurement does not inherit the node-straddling error of an interface crossing.",
+    "what_is_given_up": "The 'dendrite-growth scaling' half of checklist item 5.3. No tip velocity, no LGK scaling exponent and no steady-state growth claim is made. The retained qualitative result -- tip velocity rises monotonically with undercooling -- is reported as a diagnostic only. This is a genuine reduction in scope and is Carlos's call to accept or reject.",
+    "geometry_correction": "The far-field runs used a quarter-symmetry domain, justified in writing as 'zero flux on x=0 and y=0 IS the four-fold symmetry condition'. That was wrong: mode_number defaults to SIX in this build, and mirror planes at 90 degrees impose four-fold symmetry on a six-fold model. The re-scoped case uses a FULL domain with the seed at the centre.",
+    "recorded": "2026-08-07, before the sweep below"
+  },
+  "superseded_measurement_window": {
+    "tip_position": [
+      0.45,
+      0.58
+    ],
+    "rationale": "Fixed before any velocity was computed. Below 0.45 the seed is still relaxing from the SmoothCircleIC; above 0.58 the tip is within about 0.12 of the x = 0.7 wall and the rejected latent heat has begun to pile up against the insulated boundary. Both ends are geometry, not results."
+  },
+  "superseded_interface_width_note": "The originally declared 'interface-width independence' sweep over eps_bar is not a meaningful convergence test in the Kobayashi model: eps_bar sets the interfacial ENERGY as well as the width, so changing it changes the physics rather than the discretization. The numerically meaningful version -- mesh independence at fixed interface width -- is used instead, and this substitution is recorded rather than made silently.",
+  "superseded_domain_correction": {
+    "what_was_wrong": "dendrite.i solves a 0.7-wide box with insulated outer boundaries and the seed at its centre, leaving 0.35 of melt ahead of the tip. The latent heat the tip rejects has nowhere to go, so the melt warms, the driving force decays, and the tip decelerates as it advances. In the declared window the local tip velocity fell from 14.1 to 1.6 at T_e = 0.8 and the straight-line fit gave R^2 = 0.933 against the declared 0.98.",
+    "how_it_was_caught": "The tip velocity was not merely noisy, it was monotonically decaying, and the decay was worst at the LOWEST undercooling -- the case that spends the longest time in the box. A faster run looked linear only because it crossed the same window in less time. That is a boundary artefact, not a phase-field failure.",
+    "what_changed": "dendrite_far.i solves the same physics on a quarter-symmetry domain with the seed at the origin, L = 1.05, and a Dirichlet T = 0 on the outer boundaries holding the melt at its initial undercooling. Zero flux on x = 0 and y = 0 is exactly the symmetry condition of the four-fold anisotropy, so the quadrant is not an approximation. A T_far_field postprocessor at 0.95L reports the temperature just inside the outer boundary as a guard: if it departs from zero the domain is again too small.",
+    "what_did_not_change": "The measurement window in tip position stays [0.45, 0.58] and every tolerance is untouched. With the seed at the origin the tip position is its x coordinate, so the SAME interval is measured; the wall is now 0.62 past the end of it instead of 0.12. The solver is also unchanged -- lu at nl_rel_tol 1e-8, exactly as dendrite.i -- so the domain and its boundary condition are the only difference between the superseded runs and these. An asm/ilu preconditioner was tried for cost and abandoned: at nx = 192 the linear solve hit l_max_its and time step 1 never converged.",
+    "mesh_levels_nx": [
+      96,
+      144,
+      192
+    ],
+    "mesh_level_note": "L grew from 0.7 to 1.05, so nx grows by the same factor 1.5 to hold dx fixed at the originally declared 0.7/64, 0.7/96, 0.7/128. The declared refinement is unchanged in the only sense that matters, element size.",
+    "recorded": "2026-08-07, before the runs below",
+    "prior_mesh_evidence": "The superseded result reported mesh independence across nx = 64 and 96 only. The nx = 128 run had been killed at 5 steps by a process sweep and never reached the window, so it contributed nothing; verify.py correctly excluded it but the case was left claiming a three-level sweep it did not have. The rebuild runs all three levels to completion."
+  },
+  "superseded_timing_note": "Tip-position times are read from the solution CSV, not reconstructed as step_index * dt. The Transient executioner cuts dt back on a failed solve and the first three steps run at 0.00025, 0.0005 and 0.001, so the frame index is not proportional to time.",
+  "mesh_check_correction": {
+    "what_was_wrong": "The mesh-independence check ran at theta0 = 90, which is 30 modulo the 60-degree period of the m = 6 observable. This file's own symmetry_caveat already recorded that at 0 and 30 degrees the configuration is mirror-symmetric about a mesh axis, S_6 is identically zero, and the phase is therefore exact BY SYMMETRY rather than by measurement. The reported phase_spread_deg of 3.6e-15 across nx = 48, 96 and 144 was not evidence of mesh independence -- the check could not have failed. The caveat was already in the file; it simply had not been applied to the convergence block.",
+    "what_was_done": "Added a phase sweep at theta0 = 15, which is not mesh-symmetric, in run_mesh15.sh. The theta0 = 90 sweep is retained because the OFF-MODE amplitude it measures is informative regardless of symmetry, and it is what distinguishes the square mesh's four-fold imprint from physics.",
+    "result": "The measured phase now converges on the exact answer instead of being pinned to it: 14.3277, 14.8320, 14.9060 degrees at nx = 48, 96, 144, i.e. errors of 0.672, 0.168 and 0.094 degrees against the imposed 15. Spread 0.504 degrees. This is a check that can fail and does not.",
+    "reporting_fix": "moose_value now reports the phases in the SAME branch as reference_value. theta_m = atan2(S_m,C_m)/m has period 360/m = 60 degrees, so the raw principal value lands in (-30, 30]: a true 30 came back as -30 and a true 45 as -14.855. The tolerance was always declared modulo 360/m so the verdict was correct, but RESULTS.md was printing '-30' against a reference of '30' beside a PASS. Raw principal values are still kept in anisotropy_diagnostic.rotation_sweep[].phase_deg."
+  }
+}

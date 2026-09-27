@@ -1,0 +1,39 @@
+{
+  "case_id": "T1-02_fickian_species_diffusion",
+  "capability": "Fickian species diffusion",
+  "checklist_item": "6.1",
+  "validation_class": "A",
+  "parameters": {
+    "initial_concentration": 1.0,
+    "diffusivity_m2_per_s": 0.1,
+    "slab_length_m": 1.0,
+    "comparison_times_s": [0.025, 0.05, 0.1],
+    "dirichlet_boundary_concentration": 0.0,
+    "noflux_mean_concentration": 1.0,
+    "noflux_cosine_amplitude": 0.2
+  },
+  "quantity": {
+    "name": "concentration profile, with scalar reference at x = 0.25 m and t = 0.1 s",
+    "symbol": "c(x,t)",
+    "units": "normalized concentration"
+  },
+  "reference": {
+    "value": 0.9229000145292017,
+    "uncertainty": null,
+    "kind": "closed_form",
+    "source": "Finite slab initially at c0 with c(0,t)=c(L,t)=0: c/c0 = (4/pi) sum_{n odd} [exp(-D n^2 pi^2 t/L^2) sin(n pi x/L)/n]. No-flux check uses c = cbar + A exp(-D pi^2 t/L^2) cos(pi x/L).",
+    "derivation": "README.md and verify.py",
+    "confirmed_from": "Series summed to n=1999 and the Neumann cosine mode evaluated independently with numpy."
+  },
+  "tolerance": {
+    "metric": "maximum normalized L2 concentration-profile error over t = 0.025, 0.05, and 0.1 s",
+    "value": 0.002,
+    "rationale": "The 0.2% profile tolerance allows finite-element and time-discretization error while remaining well below visual agreement; no-flux mass conservation has a separate solver-tolerance criterion of 1e-10 relative."
+  },
+  "convergence": {
+    "expected_order": 2.0,
+    "refinement_levels": 4,
+    "spatial_order_tolerance": 0.2,
+    "mass_conservation_relative_tolerance": 1e-10
+  }
+}

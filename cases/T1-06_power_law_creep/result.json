@@ -1,0 +1,58 @@
+{
+  "case_id": "T1-06_power_law_creep",
+  "capability": "Power-law secondary creep",
+  "validation_class": "A",
+  "reference_value": 0.024444078598495237,
+  "moose_value": 0.02444938295613,
+  "units": "strain",
+  "error": {
+    "absolute": 5.304357634763196e-06,
+    "relative": 0.00021699969640458157
+  },
+  "tolerance": {
+    "metric": "relative error in the 100 MPa, 1000 K final creep strain",
+    "value": 0.01
+  },
+  "convergence": {
+    "levels": [
+      {
+        "dt_s": 0.4,
+        "final_strain": 0.024449374280854,
+        "relative_error": 0.0002166447934383648
+      },
+      {
+        "dt_s": 0.2,
+        "final_strain": 0.02444938295613,
+        "relative_error": 0.00021699969640458157
+      },
+      {
+        "dt_s": 0.1,
+        "final_strain": 0.02444935964353,
+        "relative_error": 0.00021604598485821234
+      }
+    ],
+    "observed_order": null,
+    "expected_order": null,
+    "timestep_independence_max_pairwise_relative_difference": 9.5371154636923e-07,
+    "order_not_identifiable_reason": "exact constant-stress solution; timestep variation is below solver/constitutive residual"
+  },
+  "parameter_regression": {
+    "A_reference": 1e-06,
+    "A_fitted": 9.999941808746933e-07,
+    "A_relative_error": 5.8191253067045264e-06,
+    "n_reference": 3.0,
+    "n_fitted": 3.000000572288306,
+    "n_relative_error": 1.9076276869256503e-07,
+    "Q_reference_J_per_mol": 50000.0,
+    "Q_fitted_J_per_mol": 49998.17316501489,
+    "Q_relative_error": 3.653669970226474e-05,
+    "samples": 9
+  },
+  "verdict": "PASS",
+  "runtime_s": 12.352,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "date": "2026-08-02",
+  "notes": "The constant-stress/temperature Norton round trip passes its declared parameter-regression and closed-form strain checks. Three timesteps agree within 9.54e-07 relative; a temporal order is not claimed because the exact solution makes the residual non-monotone at solver precision. This is [A] verification of the registered secondary-creep law; no independent published-alloy [E] claim is made.",
+  "limitations": "Secondary Norton law only; no primary/tertiary creep, hardening, multiaxial transient stress, or independent experimental curve."
+}

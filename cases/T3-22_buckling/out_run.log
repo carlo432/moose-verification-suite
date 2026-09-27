@@ -1,0 +1,66 @@
+
+
+*** ERROR ***
+The following error occurred in the TimeStepper 'ConstantDT' of type ConstantDT.
+
+Solve failed and timestep already at or below dtmin, cannot continue!
+
+Stack frames: 13
+0: libMesh::print_trace(std::ostream&)
+1: moose::internal::mooseErrorRaw(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)
+2: MooseBase::callMooseError(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, bool) const
+3: /home/CArlo76/miniforge/envs/moose/moose/bin/../lib/combined/libmoose-opt.so.0(+0x105e67d) [0x7029a285e67d]
+4: /home/CArlo76/miniforge/envs/moose/moose/bin/../lib/combined/libmoose-opt.so.0(+0x15724cf) [0x7029a2d724cf]
+5: TimeStepper::computeStep()
+6: Transient::execute()
+7: MooseApp::executeExecutioner()
+8: MooseApp::run()
+9: /home/CArlo76/miniforge/envs/moose/moose/bin/combined-opt(+0x50e8) [0x56cd72bb60e8]
+10: /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x70297e229d90]
+11: __libc_start_main
+12: /home/CArlo76/miniforge/envs/moose/moose/bin/combined-opt(+0x538b) [0x56cd72bb638b]
+Abort(1) on node 0 (rank 0 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 1) - process 0
+run.sh: line 26: 16626 Killed                  "$MOOSE_APP" -i column.i IMPERFECTION="$a0" Mesh/gen/nx=80 Outputs/file_base="out/col_cant_a${tag}" --color off > "out/col_cant_a${tag}.log"
+run.sh: line 26: 16627 Killed                  "$MOOSE_APP" -i column_fixed.i IMPERFECTION="$a0" Mesh/gen/nx=80 Outputs/file_base="out/col_fixed_a${tag}" --color off > "out/col_fixed_a${tag}.log"
+run.sh: line 26: 16629 Killed                  "$MOOSE_APP" -i column.i IMPERFECTION="$a0" Mesh/gen/nx=80 Outputs/file_base="out/col_cant_a${tag}" --color off > "out/col_cant_a${tag}.log"
+run.sh: line 37: 18899 Killed                  "$MOOSE_APP" -i column.i IMPERFECTION=0.2 Mesh/gen/nx="$nx" Outputs/file_base="out/col_cant_n${nx}" --color off > "out/col_cant_n${nx}.log"
+run.sh: line 37: 18900 Killed                  "$MOOSE_APP" -i column_fixed.i IMPERFECTION=0.2 Mesh/gen/nx="$nx" Outputs/file_base="out/col_fixed_n${nx}" --color off > "out/col_fixed_n${nx}.log"
+{
+  "verdict": "PASS",
+  "per_case": {
+    "cantilever_fixed_free": {
+      "Pcr": 0.16446436850006851,
+      "err": 0.0001765309950066782,
+      "checks": {
+        "within_tolerance": true,
+        "imperfection_independent": true,
+        "mesh_independent": true,
+        "southwell_linear": true,
+        "a0_recovered": true
+      }
+    },
+    "fixed_pinned": {
+      "Pcr": 1.360248709525902,
+      "err": 0.010549499779892888,
+      "checks": {
+        "within_tolerance": true,
+        "imperfection_independent": true,
+        "mesh_independent": true,
+        "southwell_linear": true,
+        "a0_recovered": true
+      }
+    },
+    "fixed_fixed_sliding": {
+      "Pcr": 2.629517472675918,
+      "err": 0.0009031647260027618,
+      "checks": {
+        "within_tolerance": true,
+        "imperfection_independent": true,
+        "mesh_independent": true,
+        "southwell_linear": true,
+        "a0_recovered": true
+      }
+    }
+  },
+  "EI_ratio": 0.9997626130393497
+}

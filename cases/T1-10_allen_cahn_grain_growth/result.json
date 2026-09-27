@@ -1,0 +1,122 @@
+{
+  "case_id": "T1-10_allen_cahn_grain_growth",
+  "capability": "Allen\u2013Cahn curvature-driven grain growth",
+  "validation_class": "A",
+  "reference_value": 0.0,
+  "moose_value": 3.723398709257312e-05,
+  "units": "dimensionless (1 - R^2 correlation of the R^2-versus-t fit)",
+  "error": {
+    "absolute": 3.723398709257312e-05,
+    "relative": 3.723398709257312e-05
+  },
+  "tolerance": {
+    "metric": "maximum absolute deviation of the R^2(t) fit from linearity, expressed as 1 - R^2_corr",
+    "value": 0.001
+  },
+  "convergence": {
+    "levels": [
+      {
+        "nx": 75,
+        "R0": 150.0,
+        "points": 45,
+        "slope_dR2_dt": -17.5748637420401,
+        "intercept": 23352.83083943554,
+        "imposed_R0_squared": 22500.0,
+        "linearity_deviation": 3.782894776101311e-05
+      },
+      {
+        "nx": 100,
+        "R0": 150.0,
+        "points": 45,
+        "slope_dR2_dt": -17.53677758282086,
+        "intercept": 23354.50232276725,
+        "imposed_R0_squared": 22500.0,
+        "linearity_deviation": 3.723398709257312e-05
+      },
+      {
+        "nx": 150,
+        "R0": 150.0,
+        "points": 45,
+        "slope_dR2_dt": -17.509422716916355,
+        "intercept": 23355.570966379673,
+        "imposed_R0_squared": 22500.0,
+        "linearity_deviation": 3.681829115575249e-05
+      }
+    ],
+    "observed_order": null,
+    "expected_order": null,
+    "order_not_claimed_reason": "The measured quantity is the slope of a fitted line, not a pointwise field value. Mesh independence is reported instead of a convergence order.",
+    "initial_radius_levels": [
+      {
+        "R0": 120.0,
+        "points": 28,
+        "slope_dR2_dt": -17.879405525017198,
+        "intercept": 15286.410468643146,
+        "imposed_R0_squared": 14400.0,
+        "linearity_deviation": 0.0001328923032725734
+      },
+      {
+        "R0": 150.0,
+        "points": 45,
+        "slope_dR2_dt": -17.53677758282086,
+        "intercept": 23354.50232276725,
+        "imposed_R0_squared": 22500.0,
+        "linearity_deviation": 3.723398709257312e-05
+      },
+      {
+        "R0": 180.0,
+        "points": 49,
+        "slope_dR2_dt": -17.310239904691457,
+        "intercept": 33204.85888505087,
+        "imposed_R0_squared": 32400.0,
+        "linearity_deviation": 3.1660328774703675e-06
+      }
+    ],
+    "mobility_levels": [
+      {
+        "GBMobility": 6e-09,
+        "R0": 150.0,
+        "points": 43,
+        "slope_dR2_dt": -8.67684903091864,
+        "intercept": 23277.031186030537,
+        "imposed_R0_squared": 22500.0,
+        "linearity_deviation": 2.1450396598768106e-06
+      },
+      {
+        "GBMobility": 1.2e-08,
+        "R0": 150.0,
+        "points": 45,
+        "slope_dR2_dt": -17.517251992867173,
+        "intercept": 23354.06960414011,
+        "imposed_R0_squared": 22500.0,
+        "linearity_deviation": 3.686891559897908e-05
+      }
+    ]
+  },
+  "grain_growth_diagnostic": {
+    "law": "R(t)^2 = R0^2 - 2 M_gb sigma_gb t",
+    "fit_window_R_over_R0": [
+      0.45,
+      0.95
+    ],
+    "worst_linearity_deviation": 0.0001328923032725734,
+    "slope_spread_over_R0": 0.03238408303501768,
+    "slope_spread_over_mesh": 0.003730883799981186,
+    "mobility_slope_ratio": 2.0188494614170525,
+    "mobility_ratio_target": 2.0,
+    "absolute_slope_not_claimed": "2 M sigma is not compared in absolute terms. GBEvolution converts GBmob0 and GBenergy through its own length_scale, time_scale and eV bookkeeping; reproducing that conversion here would mean reverse-engineering the code under test and then checking it against itself. Every other assertion the law makes is verified independently.",
+    "arrhenius_consistency": "The Arrhenius material (GBmob0=2.5e-6, Q=0.23, T=500) implies an effective mobility of 1.2013e-8 m^4/(J s); the run with GBMobility overridden to 1.2e-8 gives slope -17.51725 against the Arrhenius run's -17.53678, so the two paths agree.",
+    "polycrystal_note": "polycrystal.i is retained as a qualitative diagnostic only. Its late-window exponent fits sat near 0.06 against the asymptotic 0.5 because 64 grains over t=200 is still the transient; it carries no acceptance."
+  },
+  "checks": {
+    "R2_linear_in_time": true,
+    "slope_independent_of_R0": true,
+    "slope_proportional_to_mobility": true,
+    "mesh_independent": true
+  },
+  "verdict": "PASS",
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "notes": "An isolated circular grain shrinks with R^2 exactly linear in t: the worst deviation from linearity across the three initial radii is 1.33e-04 against the declared 0.001. The slope dR^2/dt is -17.8794 at R0=120, -17.5368 at R0=150, -17.3102 at R0=180 -- a spread of 0.0324, which is the content of dR/dt proportional to 1/R. It is mesh independent to 0.00373 across nx = 75, 100, 150, and doubling the imposed GB mobility multiplies the slope by 2.0188 against the exact 2. The absolute constant 2*M*sigma is not compared, for the reason recorded in reference.json.",
+  "limitations": "Two-dimensional, isotropic boundary energy and mobility, single boundary, no triple junctions and no stored-energy or solute-drag effects. The absolute product M*sigma is not verified against SI inputs, only its scaling. The polycrystal statistical exponent remains unverified and is not claimed."
+}

@@ -1,0 +1,30 @@
+{
+  "case_id": "T2-20_neutronics_heat_coupling",
+  "capability": "Neutronics-shaped heat source to conduction",
+  "checklist_item": "8.1",
+  "validation_class": "A",
+  "quantity": {
+    "name": "temperature profile for cosine volumetric source",
+    "symbol": "T(x)",
+    "units": "K"
+  },
+  "reference": {
+    "value": null,
+    "uncertainty": null,
+    "kind": "closed_form",
+    "source": "1-D steady conduction with the input's mesh-oriented q(x)=q0(1-cos(pi*x/L)) and fixed equal surface temperatures",
+    "derivation": "T(x)=T0 + q0/(k*a^2)*(cos(a*x)-1) + q0/(2k)*x*(L-x) + 2*q0*x/(k*a^2*L), a=pi/L; independently integrated and checked at the peak",
+    "confirmed_from": "independent integration of -k T''=q(x), including the input coordinate orientation"
+  },
+  "tolerance": {
+    "metric": "relative profile L2 error",
+    "value": 0.01,
+    "rationale": "Declared before solve; this case verifies source-to-conduction mapping, not a full eigenvalue/feedback loop."
+  },
+  "convergence": {
+    "expected_order": 2.0,
+    "refinement_levels": 3,
+    "note": "Three mesh levels on the heat-source bar."
+  },
+  "observed_order_caveat": "The measured errors are 4.72e-8, 2.95e-9, 1.85e-10 across nx = 20, 40, 80 -- a ratio of 16 per mesh doubling, i.e. FOURTH order, while the artifact declares expected_order = 2.0 for a second-order discretization. A rate that beats the method is a sign the comparison is too kind: the manufactured cosine-plus-uniform source is very nearly representable in the FE space, so the test largely verifies source integration and quadrature bookkeeping rather than the discretization error of the conduction operator. Errors at the 1e-10 level are consistent with that reading. The case is still valid for what it claims -- the source-to-conduction mapping path -- but it should not be cited as evidence of the solver's spatial accuracy."
+}

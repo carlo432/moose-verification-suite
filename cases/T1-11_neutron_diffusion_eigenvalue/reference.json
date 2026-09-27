@@ -1,0 +1,12 @@
+{
+  "case_id":"T1-11_neutron_diffusion_eigenvalue",
+  "capability":"One-group neutron diffusion eigenvalue",
+  "checklist_item":"7.1",
+  "validation_class":"A",
+  "quantity":{"name":"bare-slab k-effective","symbol":"k_eff","units":"dimensionless"},
+  "reference":{"value":5.032812832172817,"uncertainty":null,"kind":"closed_form","source":"One-group bare slab with D=1, Sigma_a=0.1, nuSigma_f=1, L=10 and vacuum/Dirichlet boundaries","derivation":"phi=sin(pi*x/L), k=nuSigma_f/(Sigma_a + D*(pi/L)^2)","confirmed_from":"independent separation-of-variables derivation"},
+  "reactor_mapping":{"D":1.0,"Sigma_a":0.1,"nuSigma_f":1.0,"geometry":"1-D slab, L=10","k_formula":"nuSigma_f/(Sigma_a + D*(pi/L)^2)"},
+  "tolerance":{"metric":"relative k-effective error","value":0.001,"rationale":"Predeclared 0.1% eigenvalue criterion; the fundamental slab flux is the secondary shape check."},
+  "sphere_reference":{"value":5.032812832172817,"kind":"closed_form","source":"Bare sphere with D=1, Sigma_a=0.1, nuSigma_f=1, radius R=10 and phi(R)=0","derivation":"The spherical fundamental mode has geometric buckling B^2=(pi/R)^2, so k=nuSigma_f/(Sigma_a+D B^2)."},
+  "convergence":{"expected_order":2.0,"refinement_levels":3,"note":"Three slab and three spherical meshes verify the one-group diffusion eigenvalue; no transport/OpenMC comparison is claimed."}
+}

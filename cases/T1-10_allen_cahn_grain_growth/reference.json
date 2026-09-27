@@ -1,0 +1,61 @@
+{
+  "case_id": "T1-10_allen_cahn_grain_growth",
+  "capability": "Allen\u2013Cahn curvature-driven grain growth",
+  "checklist_item": "5.2",
+  "validation_class": "A",
+  "quantity": {
+    "name": "curvature-driven shrinkage of an isolated circular grain",
+    "symbol": "R(t)^2",
+    "units": "length^2",
+    "observable": "Grain area from the integral of the order parameter, R = sqrt(A/pi). The law dR/dt = -M sigma / R integrates to R^2 = R0^2 - 2 M sigma t, exactly linear in t with a slope independent of R0.",
+    "supersedes": "The polycrystal exponent fit is a statistical measurement that never left the transient: late-window fits gave about 0.06 against the target 0.5. The isolated circular grain tests the same curvature-driven kinetics as a sharp analytic statement instead."
+  },
+  "reference": {
+    "kind": "closed_form",
+    "law": "R(t)^2 = R0^2 - 2 M_gb sigma_gb t",
+    "derivation": "Allen-Cahn curvature-driven boundary migration: the normal velocity of a boundary is v = -M sigma kappa_curv, and for a circle kappa_curv = 1/R, giving dR/dt = -M sigma / R.",
+    "absolute_slope_not_claimed": "2 M sigma is not compared in absolute terms. GBEvolution converts GBmob0 and GBenergy through its own length_scale, time_scale and eV bookkeeping; reproducing that conversion here would mean reverse-engineering the code under test and then checking it against itself. Every other assertion the law makes is verified independently."
+  },
+  "tolerance": {
+    "metric": "maximum absolute deviation of the R^2(t) fit from linearity, expressed as 1 - R^2_corr",
+    "value": 0.001,
+    "rationale": "Declared before the sweep. R^2 linear in t is the whole content of the curvature law; 0.001 corresponds to a correlation of 0.999."
+  },
+  "convergence": {
+    "initial_radii": [
+      120.0,
+      150.0,
+      180.0
+    ],
+    "mesh_levels_nx": [
+      75,
+      100,
+      150
+    ],
+    "mobility_levels": "GBMobility overridden to M and 2M at the reference radius and mesh",
+    "expected_order": null
+  },
+  "secondary_tolerances": {
+    "slope_independent_of_R0": {
+      "value": 0.05,
+      "metric": "relative spread of dR^2/dt across R0 = 120, 150, 180",
+      "rationale": "dR/dt proportional to 1/R is what makes the slope independent of the starting radius; this is the sharpest consequence of the law."
+    },
+    "slope_proportional_to_mobility": {
+      "value": 0.05,
+      "metric": "absolute error in slope(2M)/slope(M) against 2",
+      "rationale": "Verifies the mobility scaling without needing GBEvolution's unit conversion: whatever the constant is, doubling the imposed GB mobility must double the slope exactly."
+    },
+    "mesh_independence": {
+      "value": 0.05,
+      "metric": "relative spread of dR^2/dt across nx = 75, 100, 150"
+    }
+  },
+  "fit_window": {
+    "R_over_R0": [
+      0.45,
+      0.95
+    ],
+    "rationale": "Fixed before the sweep. Above 0.95 the SmoothCircleIC profile is still relaxing to its equilibrium tanh shape; below 0.45 the radius approaches the 60-unit diffuse interface width and the sharp-interface law no longer applies."
+  }
+}

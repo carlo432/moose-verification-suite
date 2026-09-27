@@ -1,0 +1,72 @@
+{
+  "case_id": "T1-02_fickian_species_diffusion",
+  "capability": "Fickian species diffusion",
+  "validation_class": "A",
+  "reference_value": 0.9229000145292017,
+  "moose_value": 0.92295159558012,
+  "units": "normalized concentration",
+  "error": {
+    "absolute": 5.158105091829235e-05,
+    "relative": 5.589018323356009e-05
+  },
+  "tolerance": {
+    "metric": "maximum normalized L2 concentration-profile error over t = 0.025, 0.05, and 0.1 s",
+    "value": 0.002
+  },
+  "profile": {
+    "metric": "maximum normalized L2 concentration error over three Dirichlet comparison times",
+    "value": 8.751018279477124e-05,
+    "times_s": [
+      0.025,
+      0.05,
+      0.1
+    ],
+    "finest_mesh_nx": 160
+  },
+  "convergence": {
+    "levels": [
+      {
+        "h": 0.05,
+        "nx": 20,
+        "normalized_l2_error": 0.0019543518905817555
+      },
+      {
+        "h": 0.025,
+        "nx": 40,
+        "normalized_l2_error": 0.0004894790480178193
+      },
+      {
+        "h": 0.0125,
+        "nx": 80,
+        "normalized_l2_error": 0.0001224906120463562
+      },
+      {
+        "h": 0.00625,
+        "nx": 160,
+        "normalized_l2_error": 3.071227377597111e-05
+      }
+    ],
+    "observed_order": 1.9973769281644753,
+    "expected_order": 2.0,
+    "orders_by_time": {
+      "0.025": 1.9879414169377543,
+      "0.05": 1.9949425039935682,
+      "0.1": 1.9973769281644753
+    }
+  },
+  "mass_conservation": {
+    "metric": "relative drift in integral of c over the no-flux slab",
+    "initial_mass": 1.0,
+    "final_mass": 1.0,
+    "relative_drift": 0.0,
+    "tolerance": 1e-10,
+    "noflux_profile_error": 4.0069384947321196e-07
+  },
+  "verdict": "PASS",
+  "runtime_s": 11.859,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "date": "2026-08-02",
+  "notes": "Dirichlet profiles use the odd-sine finite-slab series; the separate Neumann cosine mode supplies the mass-conservation check.",
+  "limitations": "One-dimensional constant-D transport with prescribed boundaries; no advection, reaction, multicomponent coupling, or concentration-dependent diffusivity."
+}

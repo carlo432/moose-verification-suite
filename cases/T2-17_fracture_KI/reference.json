@@ -1,0 +1,10 @@
+{
+  "case_id":"T2-17_fracture_KI",
+  "capability":"Fracture mechanics J/interaction integrals",
+  "checklist_item":"1.5",
+  "validation_class":"B",
+  "quantity":{"name":"J-integral for NAFEMS crack benchmark","symbol":"J_1","units":"force/length"},
+  "reference":{"value":2.434,"uncertainty":null,"kind":"numerical_benchmark","source":"NAFEMS R0020 Test 1.1, cited in the version-matched MOOSE j_integral_2d_small_strain.i seed comment","derivation":"Seed comment states analytic solution J1=2.434; interaction-integral K_I is a secondary cross-check","confirmed_from":"Installed MOOSE seed comment, to be cross-checked against its CSV output"},
+  "tolerance":{"metric":"relative J-integral error","value":0.03,"rationale":"Declared before solve; path-independence across five annular contours is reported separately."},
+  "convergence":{"expected_order":null,"refinement_levels":5,"note":"Contour/path trend rather than formal mesh order; crack-tip mesh is fixed by shipped crack2d.e."}
+}

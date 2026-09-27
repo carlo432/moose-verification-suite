@@ -1,0 +1,80 @@
+{
+  "case_id": "T1-07_plane_poiseuille",
+  "capability": "Laminar plane-channel flow (Poiseuille)",
+  "validation_class": "A",
+  "reference_value": 1.0,
+  "moose_value": 0.99418604686257,
+  "units": "m/s",
+  "error": {
+    "absolute": 0.0017164282006422917,
+    "relative": 0.0017164282006422917
+  },
+  "tolerance": {
+    "metric": "normalized L2 velocity-profile error at the finest transverse mesh",
+    "value": 0.02
+  },
+  "profile": {
+    "metric": "normalized L2 error of u(y) over y in [-1,1]",
+    "value": 0.0017164282006422917,
+    "mesh_levels_ny": [
+      2,
+      4,
+      8,
+      16
+    ]
+  },
+  "convergence": {
+    "levels": [
+      {
+        "ny": 2,
+        "profile_error": 0.0
+      },
+      {
+        "ny": 4,
+        "profile_error": 0.020833707298850007
+      },
+      {
+        "ny": 8,
+        "profile_error": 0.0065093403429035065
+      },
+      {
+        "ny": 16,
+        "profile_error": 0.0017164282006422917
+      }
+    ],
+    "observed_order": 1.8007190854691242,
+    "expected_order": 2.0
+  },
+  "flow_diagnostics": {
+    "max_to_average_ratio": 1.4883720935486426,
+    "reference_ratio": 1.5,
+    "fRe": 95.10701162736945,
+    "reference_fRe": 96.0,
+    "mass_balance_relative": 0.0,
+    "all_ratios": [
+      1.0,
+      1.333332789383491,
+      1.4545454537073115,
+      1.4883720935486426
+    ],
+    "all_fRe": [
+      63.89610389610496,
+      85.25379840123658,
+      92.95967796890511,
+      95.10701162736945
+    ],
+    "all_mass_balance": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "verdict": "PASS",
+  "runtime_s": 3.578,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "date": "2026-08-02",
+  "notes": "The numerical fRe is computed from the fitted centerline pressure gradient and the integrated mean velocity using the plane-channel hydraulic-diameter convention; inlet/outlet mass flow is checked independently.",
+  "limitations": "Steady incompressible plane channel only; no entrance, turbulence, compressibility, or circular-pipe geometry."
+}

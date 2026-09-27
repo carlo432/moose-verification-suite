@@ -1,0 +1,77 @@
+{
+  "case_id": "T1-11_neutron_diffusion_eigenvalue",
+  "capability": "One-group neutron diffusion eigenvalue",
+  "validation_class": "A",
+  "reference_value": 5.032812832172817,
+  "moose_value": 5.030805,
+  "units": "dimensionless",
+  "error": {
+    "absolute": 0.002007832172816748,
+    "relative": 0.0003989483097764923
+  },
+  "tolerance": {
+    "metric": "relative k-effective error",
+    "value": 0.001,
+    "rationale": "Predeclared 0.1% eigenvalue criterion; the fundamental slab flux is the secondary shape check."
+  },
+  "convergence": {
+    "slab_levels": [
+      {
+        "elements": 8,
+        "k_eff": 5.00073,
+        "relative_error": 0.00637473183340409
+      },
+      {
+        "elements": 16,
+        "k_eff": 5.024784,
+        "relative_error": 0.0015952971907660096
+      },
+      {
+        "elements": 32,
+        "k_eff": 5.030805,
+        "relative_error": 0.0003989483097764923
+      }
+    ],
+    "sphere_levels": [
+      {
+        "elements": 8,
+        "k_eff": 5.0288326807,
+        "relative_error": 0.0007908403522128848
+      },
+      {
+        "elements": 16,
+        "k_eff": 5.031794,
+        "relative_error": 0.0002024379222497208
+      },
+      {
+        "elements": 32,
+        "k_eff": 5.032557,
+        "relative_error": 5.083284066942362e-05
+      }
+    ],
+    "slab_observed_order": 1.9990454570481715,
+    "sphere_observed_order": 1.9797768630261479,
+    "expected_order": 2.0
+  },
+  "flux_shape_l2": {
+    "slab": 7.462824777017395e-09,
+    "sphere": 0.0005146947898708049,
+    "tolerance": 0.01
+  },
+  "sphere": {
+    "reference": 5.032812832172817,
+    "finest_k_eff": 5.032557,
+    "relative_error": 5.083284066942362e-05
+  },
+  "extrapolated_boundary": {
+    "extrapolation_length": 2.0,
+    "fundamental_B": 0.2284453709564703,
+    "closed_form_k_eff": 6.570851063528114
+  },
+  "verdict": "PASS",
+  "runtime_s": 0.0,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "notes": "The one-group bare-slab and radial bare-sphere diffusion eigenproblems both run on three meshes. Finest slab and sphere relative errors are 0.000399 and 5.08e-05; normalized flux-shape L2 errors are 7.46e-09 and 0.000515; observed orders are 1.999 and 1.980. An independent Robin/extrapolated-boundary derivation gives k_eff=6.57085106 for extrapolation length 2D; it is recorded as a boundary-condition cross-check, not as an OpenMC result. No OpenMC or transport comparison is claimed.",
+  "limitations": "Diffusion approximation only; the extrapolated-boundary value is analytic rather than a separate MOOSE run, and no transport correction, OpenMC cross-check, or heterogeneous reactor geometry is included."
+}

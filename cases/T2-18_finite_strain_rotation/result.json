@@ -1,0 +1,44 @@
+{
+  "case_id": "T2-18_finite_strain_rotation",
+  "capability": "Finite-strain elastic kinematics",
+  "validation_class": "A",
+  "reference_value": 0.0,
+  "moose_value": 1.8772578602721524e-08,
+  "units": "stress increment",
+  "error": {
+    "absolute": 1.8772578602721524e-08,
+    "relative": 1.8772578602721524e-14
+  },
+  "tolerance": {
+    "metric": "maximum rotation-stage stress normalized by elastic modulus",
+    "value": 1e-08,
+    "rationale": "Declared before solve; isolates the exact rigid-rotation invariant without relying on a hyperelastic material registration."
+  },
+  "convergence": {
+    "levels": [
+      {
+        "dt": 0.005,
+        "rotation_residual": 1.8772578602721524e-08,
+        "normalized": 1.8772578602721524e-14
+      },
+      {
+        "dt": 0.01,
+        "rotation_residual": 1.1900405771925193e-08,
+        "normalized": 1.1900405771925193e-14
+      },
+      {
+        "dt": 0.02,
+        "rotation_residual": 1.2949953753782495e-07,
+        "normalized": 1.2949953753782495e-13
+      }
+    ],
+    "observed_order": null,
+    "expected_order": null
+  },
+  "verdict": "PASS",
+  "runtime_s": 0.0,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "notes": "The original componentwise max-stress comparison was not objective and produced the flat false FAIL. This verifier compares principal stresses, which are invariant under rigid rotation; normalized residuals are [1.8772578602721524e-14, 1.1900405771925193e-14, 1.2949953753782495e-13]. The finest (dt=0.005) passes the predeclared criterion; the non-monotone tiny trend is roundoff, not a claimed convergence order.",
+  "limitations": "One-element elastic rotation regression; no Neo-Hookean stress-stretch curve and no independent large-strain tensile bar."
+}

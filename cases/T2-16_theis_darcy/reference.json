@@ -1,0 +1,95 @@
+{
+  "case_id": "T2-16_theis_darcy",
+  "capability": "Single-phase Darcy flow and Theis drawdown",
+  "checklist_item": "4.1",
+  "validation_class": "A",
+  "quantity": {
+    "name": "drawdown transient",
+    "symbol": "s(r,t)",
+    "units": "pressure",
+    "observable": "Radial drawdown s(r,t) = p0 - p(r,t) at t = 1000 s, compared pointwise to the Theis closed form over 2 m < r < 60 m. T and Ss are additionally recovered together by a two-parameter fit of s = A E1(B r^2), which gives T = Q/(4 pi A) and Ss = 4 T t B, so the two are identified separately rather than only through their ratio.",
+    "supersedes": "The previous row identified only the diffusivity T/Ss and reported the Theis and Cooper-Jacob fits as diagnostic. The residual turned out to be timestep discretization, not identifiability: the Theis solution is steep at early time, and the seed's dt = 200 left a 2.4% bias that falls to 0.2% at dt = 10."
+  },
+  "reference": {
+    "value": null,
+    "uncertainty": null,
+    "kind": "closed_form",
+    "source": "Theis (1935): s=(Q/(4*pi*T))*E1(r^2*S/(4*T*t)); E1= scipy.special.exp1",
+    "derivation": "The shipped seed parameters require a consistent transmissivity/storage reduction before numeric values can be asserted; no plausible number is invented.",
+    "confirmed_from": "PLAN.md equation and version-matched theis1.i seed"
+  },
+  "darcy_sanity_contract": {
+    "mu_Pa_s": 0.001,
+    "Q_m3_s": 4e-05,
+    "L_m": 100.0,
+    "k_m2": 1e-14,
+    "A_m2": 1.0,
+    "delta_p_Pa": 400000000.0,
+    "source": "Independent Darcy units check added during review rework; not used as Theis acceptance value"
+  },
+  "derived_mapping": {
+    "porosity": 0.2,
+    "density0_kg_per_m3": 1000.0,
+    "bulk_modulus_Pa": 2000000000.0,
+    "permeability_m2": 1e-14,
+    "viscosity_Pa_s": 0.001,
+    "storage_S_1_per_Pa": 1e-10,
+    "transmissivity_T_m2_per_Pa_s": 1e-11,
+    "derivation": "Divide the PorousFlow mass equation by rho0: S=phi/K and T=k/mu for unit thickness; rho0 cancels from both coefficients."
+  },
+  "tolerance": {
+    "metric": "relative drawdown error",
+    "value": 0.02,
+    "rationale": "Declared from PLAN.md before solve; result remains PARTIAL until storage/transmissivity mapping is independently confirmed."
+  },
+  "convergence": {
+    "timestep_levels_s": [
+      40,
+      20,
+      10
+    ],
+    "mesh_levels_nx": [
+      1000,
+      2000
+    ],
+    "expected_order": 1.0,
+    "note": "The dominant error is temporal, not spatial: at fixed nx the max deviation over the window falls 0.055, 0.028, 0.011 as dt halves."
+  },
+  "axisymmetric_case": {
+    "input": "theis_rz.i",
+    "porosity": 0.05,
+    "fluid_bulk_modulus": 2000000000.0,
+    "permeability": 1e-14,
+    "viscosity": 0.001,
+    "biot_coefficient": 1.0,
+    "thickness": 1.0,
+    "storage_Ss_1_per_Pa": 2.5e-11,
+    "transmissivity_T_m3_per_Pa_s": 1e-11,
+    "hydraulic_diffusivity_m2_per_s": 0.4,
+    "source_strength": {
+      "value": 0.00016,
+      "units": "volumetric, m^3/s",
+      "how_established": "PorousFlowBasicTHM here runs with multiply_by_density = false, so the PorousFlowSquarePulsePointSource mass_flux enters the volume equation directly. The two candidate readings were tested against the drawdown: taken as volumetric it gives a ratio of 0.997 to the closed form, taken as a mass rate divided by density it is off by a factor of 981. The volumetric reading is the one the code implements."
+    },
+    "derivation": "Ss = phi/K_f with biot_coefficient = 1 (the solid term (1-alpha)(alpha-phi)/K_s vanishes); T = k/mu for unit thickness; D = T/Ss."
+  },
+  "secondary_tolerances": {
+    "transmissivity_recovery": {
+      "value": 0.05,
+      "metric": "relative error of the fitted T against k/mu"
+    },
+    "storage_recovery": {
+      "value": 0.05,
+      "metric": "relative error of the fitted Ss against phi/K_f"
+    },
+    "boundary_influence": {
+      "value": 0.001,
+      "metric": "drawdown at the outer boundary normalized by the drawdown at the inner edge of the fit window",
+      "rationale": "The closed form assumes an infinite aquifer; the outer boundary must be far enough out to be undisturbed."
+    }
+  },
+  "fit_window_r_m": [
+    2.0,
+    60.0
+  ]
+}

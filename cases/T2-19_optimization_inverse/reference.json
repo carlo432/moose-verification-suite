@@ -1,0 +1,10 @@
+{
+  "case_id":"T2-19_optimization_inverse",
+  "capability":"TAO optimization and inverse-parameter recovery",
+  "checklist_item":"9.1",
+  "validation_class":"A",
+  "quantity":{"name":"constant volumetric heat-source parameter recovered from temperature measurements","symbol":"q","units":"W/m^3"},
+  "reference":{"value":1000.0,"uncertainty":null,"kind":"manufactured closed_form","source":"Version-matched MOOSE constant_heat_source optimization seed; the forward source is q and the four declared temperatures are generated at q=1000.","derivation":"Linearity of the steady conduction problem makes the reporter objective strictly convex in q; the shipped measurement vector is the q=1000 solution.","confirmed_from":"optimization/tests/optimizationreporter/constant_heat_source/{main.i,forward.i,adjoint.i}"},
+  "tolerance":{"metric":"relative recovered-source error","value":0.001,"rationale":"Declared for the PDE inverse rebuild; objective residual and adjoint-gradient consistency are reported separately."},
+  "convergence":{"expected_order":null,"refinement_levels":1,"note":"Optimization convergence is assessed by recovered q, objective residual, and adjoint gradient for the fixed measurement set."}
+}

@@ -1,0 +1,157 @@
+{
+  "case_id": "T3-23_irradiation_swelling",
+  "capability": "Dose-dependent swelling eigenstrain and the mismatch stress it drives",
+  "validation_class": "A",
+  "reference_value": -952.3809523809525,
+  "moose_value": -952.22594246034,
+  "units": "stress",
+  "error": {
+    "absolute": 0.15500992061254237,
+    "relative": 7.278867114255135e-05
+  },
+  "tolerance": {
+    "metric": "ElementL2Error of sigma_xx against the closed-form function, normalized by E*S/(3(1-nu)), for the quadratic dose profile at the finest mesh",
+    "value": 0.001
+  },
+  "convergence": {
+    "levels": [
+      {
+        "nx": 8,
+        "l2_relative": 0.0011646187382811448,
+        "l2_line_sampled": 0.0012831658629129691,
+        "linf_relative": 0.00260416666667067,
+        "szz_l2_relative": 0.0012831658629128585,
+        "syy_max_relative": 5.1812804047202096e-15
+      },
+      {
+        "nx": 16,
+        "l2_relative": 0.00029115468457028095,
+        "l2_line_sampled": 0.00037443060181318385,
+        "linf_relative": 0.0006510416666696073,
+        "szz_l2_relative": 0.0003744306018128621,
+        "syy_max_relative": 1.7872154797760548e-14
+      },
+      {
+        "nx": 32,
+        "l2_relative": 7.278867114255135e-05,
+        "l2_line_sampled": 0.00012926592045954345,
+        "linf_relative": 0.00016276041667014735,
+        "szz_l2_relative": 0.00012926592045927043,
+        "syy_max_relative": 5.3338788334050446e-14
+      }
+    ],
+    "observed_order": 2.0000000000000258,
+    "observed_orders": [
+      2.0000000000000258,
+      2.0000000000003744
+    ],
+    "expected_order": 2.0
+  },
+  "swelling_diagnostic": {
+    "reclassification": {
+      "was": "E",
+      "now": "A",
+      "reason": "No sourced swelling-versus-dose correlation is available in this workspace, and the row previously carried a self-declared 'illustrative 1%/dpa correlation' while claiming class [E]. That asserted experimental validation the suite does not have. The swelling correlation is now treated as a declared constitutive input, and what is verified is the capability MOOSE actually performs: mapping a dose-dependent volumetric eigenstrain to a mismatch stress field, against a closed form.",
+      "what_this_costs": "The suite now has no [E] rows at all. Any claim of experimental validation must be dropped unless a published correlation is obtained.",
+      "recorded": "2026-08-07, before the runs below"
+    },
+    "closed_form": "sigma_xx(y) = sigma_zz(y) = -E e(y)/(1-nu) ;  sigma_yy(y) = 0",
+    "biaxial_modulus": "E/(1-nu) = 285714.2857142857",
+    "by_dose_profile": {
+      "uniform": [
+        {
+          "nx": 8,
+          "l2_relative": 1.0571089038193948e-14,
+          "l2_line_sampled": 7.604378742896155e-15,
+          "linf_relative": 1.838316165958531e-14,
+          "szz_l2_relative": 7.770010777886661e-15,
+          "syy_max_relative": 3.14468314571733e-14
+        },
+        {
+          "nx": 16,
+          "l2_relative": 3.7699306766952595e-14,
+          "l2_line_sampled": 3.623874787621596e-14,
+          "linf_relative": 4.989715307601727e-14,
+          "szz_l2_relative": 3.755014676019759e-14,
+          "syy_max_relative": 1.3929187057848297e-13
+        },
+        {
+          "nx": 32,
+          "l2_relative": 8.046992991783269e-14,
+          "l2_line_sampled": 7.687098162454544e-14,
+          "linf_relative": 1.1280576472927349e-13,
+          "szz_l2_relative": 8.253721190442462e-14,
+          "syy_max_relative": 2.9818410775005296e-13
+        }
+      ],
+      "linear": [
+        {
+          "nx": 8,
+          "l2_relative": 3.944978994764534e-15,
+          "l2_line_sampled": 4.6421797937998705e-15,
+          "linf_relative": 9.490008778811897e-15,
+          "szz_l2_relative": 4.77011061478113e-15,
+          "syy_max_relative": 1.1079604606545299e-14
+        },
+        {
+          "nx": 16,
+          "l2_relative": 1.1991801783312749e-14,
+          "l2_line_sampled": 1.2271867099099256e-14,
+          "linf_relative": 1.9994672584289216e-14,
+          "szz_l2_relative": 1.2232840785960242e-14,
+          "syy_max_relative": 3.9189026540928593e-14
+        },
+        {
+          "nx": 32,
+          "l2_relative": 2.7701461667043146e-14,
+          "l2_line_sampled": 2.658192984206846e-14,
+          "linf_relative": 6.040181688149458e-14,
+          "szz_l2_relative": 2.7650049642875822e-14,
+          "syy_max_relative": 8.792232312662084e-14
+        }
+      ],
+      "quadratic": [
+        {
+          "nx": 8,
+          "l2_relative": 0.0011646187382811448,
+          "l2_line_sampled": 0.0012831658629129691,
+          "linf_relative": 0.00260416666667067,
+          "szz_l2_relative": 0.0012831658629128585,
+          "syy_max_relative": 5.1812804047202096e-15
+        },
+        {
+          "nx": 16,
+          "l2_relative": 0.00029115468457028095,
+          "l2_line_sampled": 0.00037443060181318385,
+          "linf_relative": 0.0006510416666696073,
+          "szz_l2_relative": 0.0003744306018128621,
+          "syy_max_relative": 1.7872154797760548e-14
+        },
+        {
+          "nx": 32,
+          "l2_relative": 7.278867114255135e-05,
+          "l2_line_sampled": 0.00012926592045954345,
+          "linf_relative": 0.00016276041667014735,
+          "szz_l2_relative": 0.00012926592045927043,
+          "syy_max_relative": 5.3338788334050446e-14
+        }
+      ]
+    },
+    "worst_transverse_stress_relative": 2.9818410775005296e-13,
+    "exactness_note": "The uniform and linear dose profiles have exact solutions inside the second-order FE space, so their errors sit at round-off (order 1e-14) and confirm the eigenstrain is applied as declared rather than testing the discretization. Only the quadratic profile has a genuine discretization error, so it carries the convergence study and the headline tolerance.",
+    "free_body_invariant": "eigenstrain_seed.i is retained: an unconstrained body under a uniform volumetric eigenstrain recovers the imposed volume change and develops no stress."
+  },
+  "checks": {
+    "quadratic_within_tolerance": true,
+    "uniform_exact": true,
+    "linear_exact": true,
+    "transverse_stress_zero": true,
+    "quadratic_order": true
+  },
+  "verdict": "PASS",
+  "runtime_s": 1.03,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "notes": "Class changed from [E] to [A]: no sourced swelling-versus-dose correlation exists in this workspace, and the previous row claimed experimental validation while its own reference block recorded the correlation as illustrative. The swelling law is now a declared input and the eigenstrain-to-stress mapping is verified against a closed form. In a restrained plane-strain slab the mismatch stress is pointwise sigma_xx = -E e(y)/(1-nu). A uniform dose reproduces it to 8.05e-14 and a linear dose to 2.77e-14, both at round-off because those solutions lie in the FE space. A quadratic dose gradient, which does not, converges at order 2.00 to 7.28e-05 against the declared 1e-3. The traction-free transverse stress stays at 2.98e-13 of the in-plane stress across every case, which is the equilibrium invariant the closed form rests on.",
+  "limitations": "The swelling correlation is a declared constitutive input, not experimental data: this verifies the eigenstrain-to-stress mapping, not a swelling law. Linear elastic, small strain, isotropic, no irradiation creep, no dose-rate or temperature dependence, and no void-nucleation physics. The suite now contains no [E] rows."
+}

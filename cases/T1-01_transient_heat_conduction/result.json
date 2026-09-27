@@ -1,0 +1,96 @@
+{
+  "case_id": "T1-01_transient_heat_conduction",
+  "capability": "Transient heat conduction",
+  "validation_class": "A",
+  "reference_value": 315.7299207050285,
+  "moose_value": 315.72775056532,
+  "units": "K",
+  "error": {
+    "absolute": 0.002170139708539409,
+    "relative": 6.873405294289064e-06
+  },
+  "tolerance": {
+    "metric": "maximum normalized L2 temperature-profile error over t = 0.0625, 0.125, and 0.25 s",
+    "value": 0.002
+  },
+  "profile": {
+    "metric": "maximum normalized L2 error over the three comparison times, normalized by |T_s-T_i|",
+    "value": 4.370043944796974e-05,
+    "times_s": [
+      0.0625,
+      0.125,
+      0.25
+    ],
+    "finest_mesh_nx": 160
+  },
+  "convergence": {
+    "levels": [
+      {
+        "h": 0.2,
+        "nx": 20,
+        "normalized_l2_error": 0.0009843543327155426
+      },
+      {
+        "h": 0.1,
+        "nx": 40,
+        "normalized_l2_error": 0.0002461823260121897
+      },
+      {
+        "h": 0.05,
+        "nx": 80,
+        "normalized_l2_error": 6.155971063130431e-05
+      },
+      {
+        "h": 0.025,
+        "nx": 160,
+        "normalized_l2_error": 1.5401947310467083e-05
+      }
+    ],
+    "observed_order": 1.999364800618322,
+    "expected_order": 2.0,
+    "orders_by_time": {
+      "0.0625": 1.9961799187133447,
+      "0.125": 1.998502621880708,
+      "0.25": 1.999364800618322
+    }
+  },
+  "temporal_convergence": {
+    "implicit-euler": {
+      "dts": [
+        0.03,
+        0.015,
+        0.0075,
+        0.00375
+      ],
+      "errors": [
+        0.006059763322331345,
+        0.003070700505854707,
+        0.0015450587274962607,
+        0.0007744472494275024
+      ],
+      "observed_order": 0.9894973834556842
+    },
+    "crank-nicolson": {
+      "dts": [
+        0.03,
+        0.015,
+        0.0075,
+        0.00375
+      ],
+      "errors": [
+        0.0002594972348928562,
+        6.297812413160614e-05,
+        1.6649762453492984e-05,
+        5.0932219703991826e-06
+      ],
+      "observed_order": 1.8932339478269433
+    }
+  },
+  "verdict": "PASS",
+  "runtime_s": 27.442,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "date": "2026-08-02",
+  "notes": "Spatial study uses the surface-step problem; temporal order study uses the same similarity solution initialized at physical time 0.01 s to avoid a time-integrator order measurement being dominated by the t=0 boundary incompatibility. The temporal mesh is nx=640 so its finest time levels are not spatial-error limited.",
+  "limitations": "Constant properties, one-dimensional finite interval, fixed far boundary approximation to a semi-infinite solid; no convection, radiation, nonlinear conductivity, or phase change."
+}

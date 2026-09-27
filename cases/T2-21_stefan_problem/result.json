@@ -1,0 +1,63 @@
+{
+  "case_id": "T2-21_stefan_problem",
+  "capability": "One-phase Stefan melting with apparent heat capacity",
+  "validation_class": "A",
+  "reference_value": 0.000850412284775067,
+  "moose_value": 0.0008528517846343997,
+  "units": "length",
+  "error": {
+    "absolute": 2.4394998593327668e-06,
+    "relative": 0.00286860844205461
+  },
+  "tolerance": {
+    "metric": "relative front-position error",
+    "value": 0.02,
+    "rationale": "Declared before solve; mushy-width sensitivity is reported separately."
+  },
+  "convergence": {
+    "levels": [
+      {
+        "sigma": 0.015,
+        "front_at_Tm": 0.0008540175683590063,
+        "front_relative_error": 0.004239453790220171,
+        "mushy_width": 0.00021265252811960558,
+        "min_temperature": 1.0,
+        "max_temperature": 2.0
+      },
+      {
+        "sigma": 0.03,
+        "front_at_Tm": 0.0008528517846343997,
+        "front_relative_error": 0.00286860844205461,
+        "mushy_width": 0.00021188593486927117,
+        "min_temperature": 1.0,
+        "max_temperature": 2.0
+      },
+      {
+        "sigma": 0.06,
+        "front_at_Tm": 0.0008528786614852806,
+        "front_relative_error": 0.0029002129371471508,
+        "mushy_width": 0.0002110341357804453,
+        "min_temperature": 1.0,
+        "max_temperature": 2.0
+      }
+    ],
+    "observed_order": null,
+    "expected_order": null
+  },
+  "latent_heat_check": {
+    "declared_Lf": 0.212862645754,
+    "integrated_excess_heat_capacity": 0.2128626457539595,
+    "relative_error": 1.9029222642075183e-13,
+    "passed": true,
+    "temperature_range": [
+      1.2,
+      1.8
+    ]
+  },
+  "verdict": "PASS",
+  "runtime_s": 0.0,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "notes": "The apparent heat capacity runs at three mushy widths on an 800-cell mesh while preserving explicit latent heat Lf=0.212862645754. Independent quadrature of the Gaussian excess gives 0.212862645754 (relative error 1.9e-13). The corrected two-phase Stefan similarity front for the declared sub-melting initial solid is 0.000850412285 m; the baseline sigma=0.03 front is 0.000852851785 m (0.00287 relative error). All three widths are within the predeclared tolerance.",
+  "limitations": "The reference assumes equal properties in the semi-infinite two-phase similarity limit; the finite 0.1 m domain and apparent-capacity regularization are tested by the three-width sweep, but no Stefan-number sweep is included."
+}

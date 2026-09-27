@@ -1,0 +1,99 @@
+{
+  "case_id": "T2-19_optimization_inverse",
+  "capability": "TAO optimization and inverse-parameter recovery",
+  "validation_class": "A",
+  "reference_value": 1000.0,
+  "moose_value": 1000.2582099939,
+  "units": "W/m^3",
+  "error": {
+    "absolute": 0.2582099938999818,
+    "relative": 0.00025820999389991606
+  },
+  "tolerance": {
+    "metric": "relative recovered-source error",
+    "value": 0.001,
+    "rationale": "Declared for the PDE inverse rebuild; objective residual and adjoint-gradient consistency are reported separately."
+  },
+  "convergence": {
+    "levels": [
+      {
+        "mesh_n": 8,
+        "parameter": "q",
+        "reference": 1000.0,
+        "recovered": 1019.766536965,
+        "relative_error": 0.01976653696499997,
+        "objective_final": 0.11206225680937,
+        "measurement_rms": 0.23670895294577815,
+        "adjoint_gradient": -9.6553787524539e-15
+      },
+      {
+        "mesh_n": 10,
+        "parameter": "q",
+        "reference": 1000.0,
+        "recovered": 1000.0,
+        "relative_error": 0.0,
+        "objective_final": 9.6935228033558e-27,
+        "measurement_rms": 6.961868572214015e-14,
+        "adjoint_gradient": 0.0
+      },
+      {
+        "mesh_n": 16,
+        "parameter": "q",
+        "reference": 1000.0,
+        "recovered": 1004.1405328932,
+        "relative_error": 0.004140532893200044,
+        "objective_final": 0.06111766092903,
+        "measurement_rms": 0.17481084195356641,
+        "adjoint_gradient": 9.401784380470201e-15
+      },
+      {
+        "mesh_n": 32,
+        "parameter": "q",
+        "reference": 1000.0,
+        "recovered": 1001.2137053175,
+        "relative_error": 0.001213705317499869,
+        "objective_final": 0.0004219545285327,
+        "measurement_rms": 0.014525056429024923,
+        "adjoint_gradient": -3.8303823383896005e-15
+      },
+      {
+        "mesh_n": 64,
+        "parameter": "q",
+        "reference": 1000.0,
+        "recovered": 1000.2582099939,
+        "relative_error": 0.00025820999389991606,
+        "objective_final": 0.0002368966105143,
+        "measurement_rms": 0.010883395851348898,
+        "adjoint_gradient": -3.3444894669164e-15
+      }
+    ],
+    "observed_order": 2.0015998555700603,
+    "expected_order": 2.0
+  },
+  "noise_study": [
+    {
+      "noise_percent": 1,
+      "recovered": 1004.4262009152,
+      "relative_error": 0.004426200915199852,
+      "objective_final": 4.6337506563001
+    },
+    {
+      "noise_percent": 5,
+      "recovered": 934.63268596408,
+      "relative_error": 0.06536731403592,
+      "objective_final": 113.47955944428
+    },
+    {
+      "noise_percent": 10,
+      "recovered": 877.00321844397,
+      "relative_error": 0.12299678155603,
+      "objective_final": 765.72455254012
+    }
+  ],
+  "verdict": "PASS",
+  "runtime_s": 0.0,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "notes": "TAO (taobqnls) optimizes a steady 2-D conduction PDE with four point measurements, a forward multi-app, an adjoint multi-app, and reporter transfers. Mesh levels 8, 10, 16, 32, 64 recover q=1000.25821 W/m^3; the finest objective=0.000237, measurement RMS=0.0109, adjoint gradient=-3.34e-15, and observed source-error order=2. Deterministic Gaussian-noise sweeps at 1%, 5%, and 10% report recovery errors [0.004426, 0.065367, 0.122997]; measurement RMS is reported as a discretization diagnostic rather than forced to zero on every mesh. ",
+  "limitations": "Single scalar source parameter and manufactured measurements; the noise study quantifies sensitivity but does not provide a multi-parameter identifiability interval."
+}

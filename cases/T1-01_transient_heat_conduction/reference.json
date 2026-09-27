@@ -1,0 +1,44 @@
+{
+  "case_id": "T1-01_transient_heat_conduction",
+  "capability": "Transient heat conduction",
+  "checklist_item": "2.1",
+  "validation_class": "A",
+  "parameters": {
+    "initial_temperature_K": 300.0,
+    "surface_temperature_K": 400.0,
+    "thermal_diffusivity_m2_per_s": 1.0,
+    "domain_length_m": 4.0,
+    "end_time_s": 0.25,
+    "comparison_times_s": [0.0625, 0.125, 0.25],
+    "front_extent_m_at_end": 2.0
+  },
+  "quantity": {
+    "name": "temperature profile, with the scalar reference reported at x = 1 m and t = 0.25 s",
+    "symbol": "T(x,t)",
+    "units": "K"
+  },
+  "reference": {
+    "value": 315.7299207050285,
+    "uncertainty": null,
+    "kind": "closed_form",
+    "source": "Similarity solution derived from the one-dimensional heat equation on x >= 0 with uniform initial temperature T_i, a surface step T(0,t) = T_s, constant properties, and T -> T_i as x -> infinity: T = T_s + (T_i - T_s) erf[x/(2 sqrt(alpha t))].",
+    "derivation": "README.md",
+    "confirmed_from": "Evaluated independently in verify.py with scipy.special.erf; no literature value is transcribed."
+  },
+  "tolerance": {
+    "metric": "maximum normalized L2 temperature-profile error over t = 0.0625, 0.125, and 0.25 s",
+    "value": 0.002,
+    "rationale": "A 0.2% profile tolerance is tighter than plotting accuracy while allowing the declared finite-element and time-discretization errors; it does not cover domain truncation, which is controlled separately by 4 sqrt(alpha t_end) < L."
+  },
+  "convergence": {
+    "expected_order": 2.0,
+    "refinement_levels": 4,
+    "spatial_order_tolerance": 0.2,
+    "temporal": {
+      "backward_euler_expected_order": 1.0,
+      "crank_nicolson_expected_order": 2.0,
+      "order_tolerance": 0.2,
+      "refinement_levels": 4
+    }
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "case_id": "T1-03_convective_radiative_bc",
+  "capability": "Convective and radiative thermal boundary conditions",
+  "validation_class": "A",
+  "reference_value": 308.45070227039247,
+  "moose_value": 308.55480392117,
+  "units": "K",
+  "error": {
+    "absolute": 0.10410165077752254,
+    "relative": 0.00033749850465979967
+  },
+  "tolerance": {
+    "metric": "fin tip temperature and base heat rate relative error; maximum radiative temperature-history deviation relative to the analytic lumped solution",
+    "value": 0.01
+  },
+  "convergence": {
+    "levels": [
+      {
+        "nx": 100,
+        "t_tip_K": 308.55369869189,
+        "t_tip_relative_error": 0.0003339153412180029,
+        "q_convective_loss": 31.395505610229975,
+        "q_relative_error": 0.003622782581760256,
+        "q_base_flux": 30.901345469231,
+        "conservation_imbalance": 0.0157398370051399
+      },
+      {
+        "nx": 200,
+        "t_tip_K": 308.55453123101,
+        "t_tip_relative_error": 0.00033661444066519254,
+        "q_convective_loss": 31.39431193613001,
+        "q_relative_error": 0.0036606653823430457,
+        "q_base_flux": 31.145818151222,
+        "conservation_imbalance": 0.00791524864165067
+      },
+      {
+        "nx": 400,
+        "t_tip_K": 308.55473933571,
+        "t_tip_relative_error": 0.00033728911800734657,
+        "q_convective_loss": 31.394012626765004,
+        "q_relative_error": 0.003670164354455586,
+        "q_base_flux": 31.269396280699,
+        "conservation_imbalance": 0.0039694303352532856
+      },
+      {
+        "nx": 800,
+        "t_tip_K": 308.55479127878,
+        "t_tip_relative_error": 0.0003374575179156907,
+        "q_convective_loss": 31.393937639374997,
+        "q_relative_error": 0.003672544176839238,
+        "q_base_flux": 31.331534703713,
+        "conservation_imbalance": 0.0019877384092057697
+      },
+      {
+        "nx": 1600,
+        "t_tip_K": 308.55480392117,
+        "t_tip_relative_error": 0.00033749850465979967,
+        "q_convective_loss": 31.393918717474975,
+        "q_relative_error": 0.003673144687954625,
+        "q_base_flux": 31.362693484749,
+        "conservation_imbalance": 0.0009946267940292286
+      }
+    ],
+    "observed_order": -0.0034406290999180024,
+    "expected_order": 2.0,
+    "order_note": "T_tip converges to the 2-D answer, which sits a fixed distance from the 1-D analytic, so the error against the analytic plateaus rather than falling. That plateau is fin model form and is removed by the width study, not by mesh refinement."
+  },
+  "convective_bc_diagnostic": {
+    "model": "fin.i, 2-D, ConvectiveHeatFluxBC on the top and bottom faces",
+    "reference_geometry": {
+      "width_m": 0.1,
+      "h_W_per_m2K": 0.5,
+      "biot_number": 0.025
+    },
+    "analytic_t_tip_K": 308.45070227039247,
+    "analytic_q": 31.509658251300003,
+    "finest_t_tip_K": 308.55480392117,
+    "finest_q_convective_loss": 31.393918717474975,
+    "finest_q_base_flux": 31.362693484749,
+    "conservation_imbalance": 0.0009946267940292286,
+    "heat_rate_source": "total convective loss over the top and bottom faces; the base diffusive flux integral is reported alongside as a conservation check but is not used for acceptance because the Dirichlet base meets the convective sides at a singular corner",
+    "fin_limit_study": {
+      "levels": [
+        {
+          "width_m": 0.1,
+          "h_W_per_m2K": 0.5,
+          "biot_number": 0.025,
+          "t_tip_K": 308.55999465514,
+          "analytic_t_tip_K": 308.45070227039247,
+          "t_tip_relative_error": 0.0003543269117011041,
+          "q_convective_loss": 31.387515091149993,
+          "analytic_q": 31.509658251300003,
+          "q_relative_error": 0.0038763721007659844
+        },
+        {
+          "width_m": 0.05,
+          "h_W_per_m2K": 0.25,
+          "biot_number": 0.00625,
+          "t_tip_K": 308.47799465725,
+          "analytic_t_tip_K": 308.45070227039247,
+          "t_tip_relative_error": 8.848216799848319e-05,
+          "q_convective_loss": 15.73894456536,
+          "analytic_q": 15.754829125650001,
+          "q_relative_error": 0.0010082343745727864
+        },
+        {
+          "width_m": 0.025,
+          "h_W_per_m2K": 0.125,
+          "biot_number": 0.0015625,
+          "t_tip_K": 308.45751107149,
+          "analytic_t_tip_K": 308.45070227039247,
+          "t_tip_relative_error": 2.207419547889876e-05,
+          "q_convective_loss": 7.8753939699975035,
+          "analytic_q": 7.877414562825001,
+          "q_relative_error": 0.00025650456902862295
+        },
+        {
+          "width_m": 0.0125,
+          "h_W_per_m2K": 0.0625,
+          "biot_number": 0.000390625,
+          "t_tip_K": 308.452391213,
+          "analytic_t_tip_K": 308.45070227039247,
+          "t_tip_relative_error": 5.4755673924481635e-06,
+          "q_convective_loss": 3.9384542611675,
+          "analytic_q": 3.9387072814125004,
+          "q_relative_error": 6.423941332076887e-05
+        }
+      ],
+      "observed_order_in_width_t_tip": 2.0050812175495483,
+      "observed_order_in_width_q": 1.9720088229376747,
+      "expected_order": 2.0,
+      "monotone": true,
+      "interpretation": "The 1-D fin formula is an approximation to the 2-D problem, exact only as the cross-section Biot number Bi = h w /(2k) tends to zero. Holding m = sqrt(2h/(k w)) fixed by scaling h proportionally to w keeps the analytic target unchanged while Bi falls as w^2, so the residual difference must vanish at second order in w. This verifies the convective boundary condition and identifies the previously unexplained order deficit as fin model form rather than discretization."
+    }
+  },
+  "radiative_diagnostic": {
+    "timestep_levels": [
+      {
+        "dt_s": 0.5,
+        "max_relative_error": 3.4476488554294656e-05
+      },
+      {
+        "dt_s": 0.25,
+        "max_relative_error": 3.400772810104894e-05
+      },
+      {
+        "dt_s": 0.125,
+        "max_relative_error": 3.389059753619632e-05
+      }
+    ],
+    "max_relative_error": 3.4476488554294656e-05,
+    "sampled": {
+      "10.0": {
+        "moose_K": 494.00299045527,
+        "analytic_K": 494.0002583292488
+      },
+      "50.0": {
+        "moose_K": 472.95053404731,
+        "analytic_K": 472.9402239376654
+      },
+      "100.0": {
+        "moose_K": 451.70594986865,
+        "analytic_K": 451.6906418028978
+      }
+    }
+  },
+  "one_dimensional_cross_check": {
+    "fin1d_tip_theta": 8.450268865993,
+    "analytic_theta_tip": 8.450702270392473,
+    "role": "independent confirmation of the analytic fin solution; carries no acceptance"
+  },
+  "checks": {
+    "t_tip_within_tolerance": true,
+    "heat_rate_within_tolerance": true,
+    "energy_balance_closes": true,
+    "fin_limit_monotone": true,
+    "fin_limit_order": true,
+    "radiative_within_tolerance": true
+  },
+  "verdict": "PASS",
+  "runtime_s": 11.726,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "notes": "Acceptance is on the 2-D ConvectiveHeatFluxBC model. At the reference geometry (w=0.1, Bi=0.025) the finest mesh gives T_tip=308.554804 K against the analytic 308.450702 K, a relative error of 0.000337, and a fin heat rate of 31.393919 against 31.509658 (0.00367); the base flux integral agrees with the convective loss to 0.000995, so energy closes. Refining the mesh does not reduce the gap to the analytic value because it is fin model form, not discretization: holding m fixed while shrinking the width drives Bi as w^2 and the T_tip deviation falls with observed order 2.01 in w against the expected 2.0. The radiative lumped history matches the integrated ODE to 3.45e-05 across three timesteps.",
+  "limitations": "Constant properties, prescribed emissivity, no view factors or internal generation. The fin comparison is against the 1-D fin approximation, which is why the residual at finite width is nonzero by construction; the width study quantifies it rather than removing it from the reference geometry."
+}

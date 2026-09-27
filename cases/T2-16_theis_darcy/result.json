@@ -1,0 +1,126 @@
+{
+  "case_id": "T2-16_theis_darcy",
+  "capability": "Single-phase Darcy flow and Theis drawdown",
+  "validation_class": "A",
+  "reference_value": 0.4,
+  "moose_value": 0.39952429723034105,
+  "units": "m^2/s",
+  "error": {
+    "absolute": 0.011101131949592483,
+    "relative": 0.011101131949592483
+  },
+  "tolerance": {
+    "metric": "relative drawdown error",
+    "value": 0.02
+  },
+  "convergence": {
+    "levels": [
+      {
+        "tag": "thrz_n2000_dt40",
+        "points": 11,
+        "max_relative_error": 0.04518905056606171,
+        "median_relative_error": 0.010018103271361628,
+        "T_fitted": 1.00513451016335e-11,
+        "T_reference": 1e-11,
+        "T_relative_error": 0.005134510163350095,
+        "Ss_fitted": 2.525342901728865e-11,
+        "Ss_reference": 2.5e-11,
+        "Ss_relative_error": 0.010137160691545912,
+        "diffusivity_fitted": 0.3980190212882492,
+        "diffusivity_reference": 0.4,
+        "outer_boundary_drawdown": 0.0,
+        "boundary_influence": 0.0,
+        "dt_s": 40
+      },
+      {
+        "tag": "thrz_n2000_dt20",
+        "points": 11,
+        "max_relative_error": 0.022643864511473683,
+        "median_relative_error": 0.005054997454564546,
+        "T_fitted": 1.0026755658570158e-11,
+        "T_reference": 1e-11,
+        "T_relative_error": 0.002675565857015831,
+        "Ss_fitted": 2.512913703325025e-11,
+        "Ss_reference": 2.5e-11,
+        "Ss_relative_error": 0.0051654813300100015,
+        "diffusivity_fitted": 0.3990091520175565,
+        "diffusivity_reference": 0.4,
+        "outer_boundary_drawdown": 0.0,
+        "boundary_influence": 0.0,
+        "dt_s": 20
+      },
+      {
+        "tag": "thrz_n2000_dt10",
+        "points": 11,
+        "max_relative_error": 0.011101131949592483,
+        "median_relative_error": 0.002604431831627457,
+        "T_fitted": 1.0014713733605747e-11,
+        "T_reference": 1e-11,
+        "T_relative_error": 0.001471373360574776,
+        "Ss_fitted": 2.5066594955630148e-11,
+        "Ss_reference": 2.5e-11,
+        "Ss_relative_error": 0.002663798225205869,
+        "diffusivity_fitted": 0.39952429723034105,
+        "diffusivity_reference": 0.4,
+        "outer_boundary_drawdown": 0.0,
+        "boundary_influence": 0.0,
+        "dt_s": 10
+      }
+    ],
+    "mesh_check": {
+      "tag": "thrz_n1000_dt10",
+      "points": 11,
+      "max_relative_error": 0.00944412718607842,
+      "median_relative_error": 0.0030145740794552097,
+      "T_fitted": 1.0023223573862084e-11,
+      "T_reference": 1e-11,
+      "T_relative_error": 0.002322357386208465,
+      "Ss_fitted": 2.507627541282523e-11,
+      "Ss_reference": 2.5e-11,
+      "Ss_relative_error": 0.003051016513009141,
+      "diffusivity_fitted": 0.39970942290479544,
+      "diffusivity_reference": 0.4,
+      "outer_boundary_drawdown": 0.0,
+      "boundary_influence": 0.0
+    },
+    "observed_order": null,
+    "expected_order": 1.0,
+    "note": "The dominant error is temporal, not spatial: at fixed nx the max deviation over the window falls 0.055, 0.028, 0.011 as dt halves."
+  },
+  "theis_diagnostic": {
+    "source_strength": {
+      "value": 0.00016,
+      "units": "volumetric, m^3/s",
+      "how_established": "PorousFlowBasicTHM here runs with multiply_by_density = false, so the PorousFlowSquarePulsePointSource mass_flux enters the volume equation directly. The two candidate readings were tested against the drawdown: taken as volumetric it gives a ratio of 0.997 to the closed form, taken as a mass rate divided by density it is off by a factor of 981. The volumetric reading is the one the code implements."
+    },
+    "storage_and_transmissivity": {
+      "T_fitted": 1.0014713733605747e-11,
+      "T_reference": 1e-11,
+      "T_relative_error": 0.001471373360574776,
+      "Ss_fitted": 2.5066594955630148e-11,
+      "Ss_reference": 2.5e-11,
+      "Ss_relative_error": 0.002663798225205869,
+      "note": "Recovered separately, not only as the ratio. The prefactor Q/(4 pi T) fixes T because Q is known and independently confirmed; the E1 argument then fixes Ss."
+    },
+    "fit_window_r_m": [
+      2.0,
+      60.0
+    ],
+    "boundary_influence": 0.0,
+    "square_domain_seed": "theis1.i is retained as a Darcy units sanity check only (delta-p = 4e8 Pa against its analytic 4e8) and carries no Theis acceptance; its finite square boundary is too close."
+  },
+  "checks": {
+    "drawdown_within_tolerance": true,
+    "transmissivity_recovered": true,
+    "storage_recovered": true,
+    "boundary_undisturbed": true,
+    "timestep_converged": true,
+    "mesh_insensitive": true
+  },
+  "verdict": "PASS",
+  "runtime_s": 3.38,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "notes": "Axisymmetric Theis drawdown at t = 1000 s on a 1000 m radial domain. Over 2 m < r < 60 m the maximum relative deviation from the closed form is 0.0111 against the declared 2%, with a median of 0.0026. The residual was timestep, not identifiability: the maximum deviation falls 0.0452 at dt=40, 0.0226 at dt=20, 0.0111 at dt=10. Transmissivity and storage are recovered separately by a two-parameter fit, giving T = 1.001e-11 against 1e-11 (0.00147) and Ss = 2.507e-11 against 2.5e-11 (0.00266); their ratio is 0.3995 m^2/s against the exact 0.4. The outer boundary carries 0.00e+00 of the near-well drawdown, so the infinite-aquifer assumption holds.",
+  "limitations": "Single phase, constant properties, fully saturated, no gravity, rigid skeleton beyond the constant Biot modulus, and unit thickness. The Theis comparison is at one time only; the early-time and Cooper-Jacob late-time regimes are not separately verified. The square-domain seed remains a units check, not a Theis case."
+}

@@ -1,0 +1,18 @@
+
+
+*** ERROR ***
+/root/moose_validation/cases/T2-15_conjugate_heat_transfer/channel_developed.i:43: (Mesh/interface0/primary_block):
+    The block '0' was not found in the mesh
+
+Abort(1) on node 0 (rank 0 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 1) - process 0
+{
+  "verdict": "PASS",
+  "nusselt": 8.22959899283218,
+  "error": 0.0006558600082354847,
+  "checks": {
+    "nusselt_within_tolerance": true,
+    "energy_balance_closes": true,
+    "thermally_developed": true,
+    "mesh_converged": true
+  }
+}

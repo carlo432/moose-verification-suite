@@ -1,0 +1,38 @@
+{
+  "case_id": "T1-04_reaction_diffusion",
+  "capability": "Steady reaction–diffusion with first-order sink",
+  "checklist_item": "6.2",
+  "validation_class": "A",
+  "parameters": {
+    "diffusivity": 1.0,
+    "reaction_rate": 1.0,
+    "penetration_length": 1.0,
+    "surface_concentration": 1.0,
+    "ambient_concentration": 0.0,
+    "L_over_lambda_regimes": [0.5, 2.0, 10.0]
+  },
+  "quantity": {
+    "name": "steady concentration profile and recovered penetration length",
+    "symbol": "c(x), lambda",
+    "units": "normalized concentration and m"
+  },
+  "reference": {
+    "value": 0.41015427200459836,
+    "uncertainty": null,
+    "kind": "closed_form",
+    "source": "For -D c'' + k c = 0, c(0)=c_s, c'(L)=0: c(x)=c_s cosh[(L-x)/lambda]/cosh(L/lambda), lambda=sqrt(D/k).",
+    "derivation": "README.md and verify.py",
+    "confirmed_from": "Analytic expression evaluated independently with numpy for L/lambda = 0.5, 2, and 10."
+  },
+  "tolerance": {
+    "metric": "maximum normalized L2 profile error over the three L/lambda regimes",
+    "value": 0.005,
+    "rationale": "The profile tolerance is 0.5%; recovered lambda has a separate 0.5% criterion and is not allowed to mask a pointwise profile error."
+  },
+  "convergence": {
+    "expected_order": 2.0,
+    "refinement_levels": 4,
+    "spatial_order_tolerance": 0.2,
+    "lambda_relative_tolerance": 0.005
+  }
+}

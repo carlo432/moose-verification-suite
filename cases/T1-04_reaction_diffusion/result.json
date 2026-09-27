@@ -1,0 +1,93 @@
+{
+  "case_id": "T1-04_reaction_diffusion",
+  "capability": "Steady reaction\u2013diffusion with first-order sink",
+  "validation_class": "A",
+  "reference_value": 0.41015427200459836,
+  "moose_value": 0.41015349330816,
+  "units": "normalized concentration",
+  "error": {
+    "absolute": 7.786964383860173e-07,
+    "relative": 1.898545234163225e-06
+  },
+  "tolerance": {
+    "metric": "maximum normalized L2 profile error over the three L/lambda regimes",
+    "value": 0.005
+  },
+  "profile": {
+    "metric": "maximum normalized L2 profile error over L/lambda = 0.5, 2, 10",
+    "value": 6.434215746598795e-06,
+    "regimes": [
+      "05",
+      "2",
+      "10"
+    ],
+    "finest_mesh_nx": 320
+  },
+  "convergence": {
+    "levels": [
+      {
+        "nx": 40,
+        "h_by_lambda": 0.05,
+        "error_L_over_lambda_2": 4.506174858814644e-05
+      },
+      {
+        "nx": 80,
+        "h_by_lambda": 0.025,
+        "error_L_over_lambda_2": 1.126368192132265e-05
+      },
+      {
+        "nx": 160,
+        "h_by_lambda": 0.0125,
+        "error_L_over_lambda_2": 2.8158105469701887e-06
+      },
+      {
+        "nx": 320,
+        "h_by_lambda": 0.00625,
+        "error_L_over_lambda_2": 7.03946585455614e-07
+      }
+    ],
+    "observed_order": 2.000093689568029,
+    "expected_order": 2.0,
+    "orders_by_regime": {
+      "05": 1.9998871017984845,
+      "2": 2.000093689568029,
+      "10": 2.002250228203383
+    }
+  },
+  "penetration_length": {
+    "reference_lambda": 1.0,
+    "fitted_lambda_by_regime": {
+      "05": [
+        0.9999934894980296,
+        0.9999983723891066,
+        0.9999995931052749,
+        0.9999998982455017
+      ],
+      "2": [
+        0.9998958148838188,
+        0.9999739576654493,
+        0.9999934895419127,
+        0.9999983723914344
+      ],
+      "10": [
+        0.9973842518734115,
+        0.9993482369619393,
+        0.999837194535989,
+        0.9999593083401501
+      ]
+    },
+    "finest_relative_errors": {
+      "05": 1.0175449827176664e-07,
+      "2": 1.6276085655908545e-06,
+      "10": 4.069165984987855e-05
+    },
+    "maximum_finest_relative_error": 4.069165984987855e-05
+  },
+  "verdict": "PASS",
+  "runtime_s": 2.848,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "date": "2026-08-02",
+  "notes": "Each regime is solved with the same D and k while L is varied; lambda is fitted independently from the full numerical profile.",
+  "limitations": "Steady one-dimensional linear sink with constant diffusivity; no advection, nonlinear kinetics, multicomponent effects, or concentration-dependent properties."
+}

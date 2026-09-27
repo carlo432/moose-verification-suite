@@ -1,0 +1,207 @@
+{
+  "case_id": "T2-14_natural_convection",
+  "capability": "Boussinesq natural convection in a differentially heated cavity",
+  "validation_class": "B",
+  "reference_value": {
+    "Ra": [
+      1000,
+      10000,
+      100000,
+      1000000
+    ],
+    "Nu_avg": [
+      1.118,
+      2.243,
+      4.519,
+      8.8
+    ]
+  },
+  "moose_value": {
+    "Ra": 1000000.0,
+    "mesh_n": 128,
+    "Nu_avg": 9.1073648183746,
+    "midplane_ux": 67.10503166679987
+  },
+  "units": "dimensionless",
+  "error": {
+    "absolute": null,
+    "relative": null,
+    "finest_Nu_relative": 0.03492782026984087,
+    "finest_midplane_velocity_relative": 0.038295399455359425
+  },
+  "tolerance": {
+    "metric": "relative Nu and midplane-velocity error",
+    "value": 0.04,
+    "rationale": "Declared from PLAN.md before the refinement solve; the cited benchmark transcription is recorded above."
+  },
+  "convergence": {
+    "levels": [
+      {
+        "Ra": 1000.0,
+        "mesh_n": 32,
+        "max_speed": 3.6419628387643135,
+        "mean_speed": 2.1506338630525628,
+        "midplane_ux_max_abs": 3.5879157335396448,
+        "midplane_ux_anchor": 3.649,
+        "midplane_ux_relative_to_anchor": 0.016740001770445434,
+        "T_min": 11.13867851670392,
+        "T_max": 988.8613214832961,
+        "Nu_hot": 1.1320529210354,
+        "Nu_cold": 1.1320529210354,
+        "Nu_reference": 1.118,
+        "Nu_relative_error": 0.012569696811627784,
+        "wall_flux_relative_mismatch": 0.0,
+        "flux_source": "SideDiffusiveFluxIntegral"
+      },
+      {
+        "Ra": 10000.0,
+        "mesh_n": 32,
+        "max_speed": 19.543730868721457,
+        "mean_speed": 10.492482844043131,
+        "midplane_ux_max_abs": 16.16572464042673,
+        "midplane_ux_anchor": 16.178,
+        "midplane_ux_relative_to_anchor": 0.0007587686718549813,
+        "T_min": 98.91159624797062,
+        "T_max": 9901.08840375203,
+        "Nu_hot": 2.2949270123257,
+        "Nu_cold": 2.2949270123257,
+        "Nu_reference": 2.243,
+        "Nu_relative_error": 0.02315069653397228,
+        "wall_flux_relative_mismatch": 0.0,
+        "flux_source": "SideDiffusiveFluxIntegral"
+      },
+      {
+        "Ra": 100000.0,
+        "mesh_n": 32,
+        "max_speed": 69.96076143473147,
+        "mean_speed": 27.322976089552704,
+        "midplane_ux_max_abs": 36.80084191225301,
+        "midplane_ux_anchor": 34.73,
+        "midplane_ux_relative_to_anchor": 0.059626890649381314,
+        "T_min": 1372.0396114034022,
+        "T_max": 98627.96038859659,
+        "Nu_hot": 4.8302678623873,
+        "Nu_cold": 4.8302678623873,
+        "Nu_reference": 4.519,
+        "Nu_relative_error": 0.06887981022069045,
+        "wall_flux_relative_mismatch": 0.0,
+        "flux_source": "SideDiffusiveFluxIntegral"
+      },
+      {
+        "Ra": 100000.0,
+        "mesh_n": 64,
+        "max_speed": 70.802679468601,
+        "mean_speed": 26.437724866524306,
+        "midplane_ux_max_abs": 35.09849380618221,
+        "midplane_ux_anchor": 34.73,
+        "midplane_ux_relative_to_anchor": 0.010610244923185075,
+        "T_min": 623.597826090295,
+        "T_max": 99376.40217390971,
+        "Nu_hot": 4.673677449506,
+        "Nu_cold": 4.673677449506,
+        "Nu_reference": 4.519,
+        "Nu_relative_error": 0.03422824729055107,
+        "wall_flux_relative_mismatch": 0.0,
+        "flux_source": "SideDiffusiveFluxIntegral"
+      },
+      {
+        "Ra": 1000000.0,
+        "mesh_n": 32,
+        "max_speed": 220.8711581639157,
+        "mean_speed": 59.88523065669641,
+        "midplane_ux_max_abs": 73.58761955770989,
+        "midplane_ux_anchor": 64.63,
+        "midplane_ux_relative_to_anchor": 0.13859847683289317,
+        "T_min": 22721.374493810894,
+        "T_max": 977278.6255061892,
+        "Nu_hot": 10.217622869267,
+        "Nu_cold": 10.217622869267,
+        "Nu_reference": 8.8,
+        "Nu_relative_error": 0.16109350787124987,
+        "wall_flux_relative_mismatch": 0.0,
+        "flux_source": "SideDiffusiveFluxIntegral"
+      },
+      {
+        "Ra": 1000000.0,
+        "mesh_n": 128,
+        "max_speed": 227.94294395844932,
+        "mean_speed": 54.84861457657084,
+        "midplane_ux_max_abs": 67.10503166679987,
+        "midplane_ux_anchor": 64.63,
+        "midplane_ux_relative_to_anchor": 0.038295399455359425,
+        "T_min": 4253.519688138565,
+        "T_max": 995746.4803118615,
+        "Nu_hot": 9.1073648183746,
+        "Nu_cold": 9.1073648183746,
+        "Nu_reference": 8.8,
+        "Nu_relative_error": 0.03492782026984087,
+        "wall_flux_relative_mismatch": 0.0,
+        "flux_source": "SideDiffusiveFluxIntegral"
+      },
+      {
+        "Ra": 1000000.0,
+        "mesh_n": 64,
+        "max_speed": 230.05718567895403,
+        "mean_speed": 56.27643140809791,
+        "midplane_ux_max_abs": 69.14731947603661,
+        "midplane_ux_anchor": 64.63,
+        "midplane_ux_relative_to_anchor": 0.06989508704992442,
+        "T_min": 9479.169129644162,
+        "T_max": 990520.8308703558,
+        "Nu_hot": 9.3692411022215,
+        "Nu_cold": 9.3692411022215,
+        "Nu_reference": 8.8,
+        "Nu_relative_error": 0.06468648888880657,
+        "wall_flux_relative_mismatch": 0.0,
+        "flux_source": "SideDiffusiveFluxIntegral"
+      },
+      {
+        "Ra": 1000000.0,
+        "mesh_n": 96,
+        "max_speed": 228.97943323792768,
+        "mean_speed": 55.26932420421723,
+        "midplane_ux_max_abs": 67.74590870916539,
+        "midplane_ux_anchor": 64.63,
+        "midplane_ux_relative_to_anchor": 0.04821149170919692,
+        "T_min": 5893.301724269221,
+        "T_max": 994106.6982757307,
+        "Nu_hot": 9.180020995809802,
+        "Nu_cold": 9.180020995809802,
+        "Nu_reference": 8.8,
+        "Nu_relative_error": 0.04318420406929557,
+        "wall_flux_relative_mismatch": 0.0,
+        "flux_source": "SideDiffusiveFluxIntegral"
+      }
+    ],
+    "observed_order": null,
+    "expected_order": null,
+    "ra1e6_mesh_convergence": {
+      "mesh_n": [
+        32.0,
+        64.0,
+        96.0,
+        128.0
+      ],
+      "Nu": [
+        10.217622869267,
+        9.3692411022215,
+        9.180020995809802,
+        9.1073648183746
+      ],
+      "relative_error": [
+        0.16109350787124987,
+        0.06468648888880657,
+        0.04318420406929557,
+        0.03492782026984087
+      ],
+      "observed_order_of_error": 1.1183427358396383,
+      "interpretation": "The error against the benchmark is still falling at roughly first order, which is consistent with convergence to 8.8 rather than to a different limit; a nonzero limit would flatten this slope toward zero. The finest mesh is inside the declared 4% but the sequence is not yet asymptotically converged."
+    }
+  },
+  "verdict": "PASS",
+  "runtime_s": 0.0,
+  "ranks": 1,
+  "moose_version": "snapshot-20-10-27-41583-g2bd11a08a7",
+  "notes": "Boussinesq cases run across four Rayleigh numbers with mesh refinements. Registered SideDiffusiveFluxIntegral postprocessors provide hot/cold wall fluxes directly. The finest qualifying Ra=1e6 mesh (128x128) has Nu relative error 0.0349, midplane-velocity relative error 0.0383, and wall-flux mismatch 0; all are evaluated against the committed 4% benchmark tolerance.",
+  "limitations": "This is a benchmark comparison, not experimental validation. The midplane velocity is a single extracted diagnostic rather than a full profile/vortex-center comparison, and the primary de Vahl Davis table is represented by the cited public transcription."
+}

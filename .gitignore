@@ -1,0 +1,20 @@
+# MOOSE output
+cases/*/out/
+*.e
+*.e-s*
+*_out.csv
+*_out_*.csv
+*.i.bak
+
+# python
+__pycache__/
+*.pyc
+cases/*/.jitcache/
+
+# keep the deliverables
+!cases/*/result.json
+!cases/*/reference.json
+!data/summary.csv
+!figures/*.png
+.jitcache/
+cases/T3-24_fsi/*.msh
