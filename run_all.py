@@ -7,6 +7,12 @@ from pathlib import Path
 ROOT=Path(__file__).parent
 CASES=sorted((ROOT/'cases').iterdir(), key=lambda p:(int(p.name.split('-')[0][1:]), int(p.name.split('-')[1].split('_')[0])))
 
+def scored_error(err,tol):
+    """The error the verdict is judged on: absolute when the declared metric is an absolute error."""
+    if tol.get('metric','').lower().startswith(('absolute','maximum absolute')) and err.get('absolute') is not None:
+        return err['absolute']
+    return err.get('relative') if err.get('relative') is not None else err.get('absolute')
+
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--skip-run',action='store_true',help='collect existing result.json files without rerunning solvers'); args=ap.parse_args()
     rows=[]
@@ -20,7 +26,7 @@ def main():
         result=json.loads((case/'result.json').read_text()); ref=json.loads((case/'reference.json').read_text())
         conv=result.get('convergence') or {}; err=result.get('error') or {}
         tol=result.get('tolerance') or {}
-        rows.append({'case_id':result.get('case_id',case.name),'capability':result.get('capability',''),'checklist_item':ref.get('checklist_item',''),'validation_class':result.get('validation_class',''),'reference_value':result.get('reference_value'),'moose_value':result.get('moose_value'),'units':result.get('units',''),'scored_metric':tol.get('metric',''),'scored_error':err.get('relative') if err.get('relative') is not None else err.get('absolute'),'tolerance':tol.get('value'),'observed_order':conv.get('observed_order'),'verdict':result.get('verdict',''),'runtime_s':result.get('runtime_s',0)})
+        rows.append({'case_id':result.get('case_id',case.name),'capability':result.get('capability',''),'checklist_item':ref.get('checklist_item',''),'validation_class':result.get('validation_class',''),'reference_value':result.get('reference_value'),'moose_value':result.get('moose_value'),'units':result.get('units',''),'scored_metric':tol.get('metric',''),'scored_error':scored_error(err,tol),'tolerance':tol.get('value'),'observed_order':conv.get('observed_order'),'verdict':result.get('verdict',''),'runtime_s':result.get('runtime_s',0)})
     (ROOT/'data').mkdir(exist_ok=True)
     fields=list(rows[0]) if rows else []
     with (ROOT/'data/summary.csv').open('w',newline='') as f:
